@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convex Skills</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="terminal-container">
+    <div class="terminal-header">
+      <div class="terminal-buttons">
+        <span class="btn-close"></span>
+        <span class="btn-minimize"></span>
+        <span class="btn-maximize"></span>
+      </div>
+      <div class="terminal-title">~/projects/convex-skills</div>
+    </div>
+    
+    <div class="terminal-body">
+      <div class="terminal-line">
+        <span class="prompt">&#9650;</span>
+        <span class="path">convex-skills/</span>
+        <span class="branch">(main)</span>
+        <span class="command">ls --tree skills</span>
+      </div>
+      
+      <div class="tree-container" id="skills-tree">
+        <div class="tree-folder">
+          <span class="folder-icon">&#128193;</span>
+          <span class="folder-name">skills</span>
+        </div>
+        
+        <div class="tree-item" data-skill="convex-best-practices">
+          <span class="tree-branch">&#9500;&#9472;&#9472;</span>
+          <span class="file-badge">MD</span>
+          <span class="file-name">convex-best-practices.md</span>
+        </div>
+        
+        <div class="tree-item" data-skill="convex-component-authoring">
+          <span class="tree-branch">&#9500;&#9472;&#9472;</span>
+          <span class="file-badge">MD</span>
+          <span class="file-name">convex-component-authoring.md</span>
+        </div>
+        
+        <div class="tree-item" data-skill="convex-realtime">
+          <span class="tree-branch">&#9500;&#9472;&#9472;</span>
+          <span class="file-badge">MD</span>
+          <span class="file-name">convex-realtime.md</span>
+        </div>
+        
+        <div class="tree-item" data-skill="convex-functions">
+          <span class="tree-branch">&#9500;&#9472;&#9472;</span>
+          <span class="file-badge">MD</span>
+          <span class="file-name">convex-functions.md</span>
+        </div>
+        
+        <div class="tree-item" data-skill="convex-file-storage">
+          <span class="tree-branch">&#9500;&#9472;&#9472;</span>
+          <span class="file-badge">MD</span>
+          <span class="file-name">convex-file-storage.md</span>
+        </div>
+        
+        <div class="tree-item" data-skill="convex-security-check">
+          <span class="tree-branch">&#9500;&#9472;&#9472;</span>
+          <span class="file-badge">MD</span>
+          <span class="file-name">convex-security-check.md</span>
+        </div>
+        
+        <div class="tree-item" data-skill="convex-security-audit">
+          <span class="tree-branch">&#9500;&#9472;&#9472;</span>
+          <span class="file-badge">MD</span>
+          <span class="file-name">convex-security-audit.md</span>
+        </div>
+        
+        <div class="tree-item" data-skill="convex-schema-validator">
+          <span class="tree-branch">&#9500;&#9472;&#9472;</span>
+          <span class="file-badge">MD</span>
+          <span class="file-name">convex-schema-validator.md</span>
+        </div>
+        
+        <div class="tree-item last" data-skill="convex-agents">
+          <span class="tree-branch">&#9492;&#9472;&#9472;</span>
+          <span class="file-badge">MD</span>
+          <span class="file-name">convex-agents.md</span>
+        </div>
+      </div>
+      
+      <div class="terminal-line prompt-line">
+        <span class="prompt">&#9650;</span>
+        <span class="path">convex-skills/</span>
+        <span class="branch">(main)</span>
+        <span class="cursor">&#9608;</span>
+      </div>
+    </div>
+    
+    <div class="terminal-footer">
+      <span class="footer-hint">[Click] Open skill</span>
+      <span class="footer-hint">[/] Search</span>
+      <span class="footer-hint">[j/k] Navigate</span>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>
