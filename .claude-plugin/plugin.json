@@ -4,7 +4,7 @@
   "description": "Agent skills for building production-ready Convex applications. Includes best practices, functions, realtime patterns, schema validation, file storage, security audits, and more.",
   "author": "Convex",
   "license": "Apache-2.0",
-  "repository": "https://github.com/get-convex/convex-skills",
+  "repository": "https://github.com/get-convex/skills",
   "skills": [
     "skills/convex-best-practices",
     "skills/convex-functions",

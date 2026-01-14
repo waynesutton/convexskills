@@ -12,7 +12,7 @@ This repository contains skills that help AI assistants understand and implement
 
 ```bash
 # Add the marketplace
-claude plugin marketplace add get-convex/convex-skills
+claude plugin marketplace add get-convex/skills
 
 # Install the plugin
 claude plugin install convex-skills
@@ -21,8 +21,8 @@ claude plugin install convex-skills
 ### Claude Code (from local clone)
 
 ```bash
-git clone https://github.com/get-convex/convex-skills.git
-cd convex-skills
+git clone https://github.com/get-convex/skills.git
+cd skills
 # Point Claude Code to this directory
 ```
 
