@@ -1,0 +1,22 @@
+{
+  "name": "convex-skills",
+  "version": "1.0.0",
+  "description": "Agent skills for building production-ready Convex applications. Includes best practices, functions, realtime patterns, schema validation, file storage, security audits, and more.",
+  "author": "Convex",
+  "license": "Apache-2.0",
+  "repository": "https://github.com/get-convex/convex-skills",
+  "skills": [
+    "skills/convex-best-practices",
+    "skills/convex-functions",
+    "skills/convex-realtime",
+    "skills/convex-schema-validator",
+    "skills/convex-file-storage",
+    "skills/convex-agents",
+    "skills/convex-cron-jobs",
+    "skills/convex-http-actions",
+    "skills/convex-migrations",
+    "skills/convex-security-check",
+    "skills/convex-security-audit",
+    "skills/convex-component-authoring"
+  ]
+}
