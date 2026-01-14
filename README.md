@@ -194,5 +194,3 @@ Apache-2.0 License - see [LICENSE](LICENSE) for details.
 - [Convex Documentation](https://docs.convex.dev/)
 - [Convex LLMs.txt](https://docs.convex.dev/llms.txt)
 - [Agent Skills Specification](https://github.com/anthropics/skills)
-- [Vercel Agent Skills](https://github.com/vercel-labs/agent-skills)
-- [Sentry Skills](https://github.com/getsentry/skills)
