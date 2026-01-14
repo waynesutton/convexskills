@@ -1,24 +1,27 @@
-# Convex Project
+# Convex Skills
 
-This project uses [Convex](https://convex.dev) as its backend platform.
+Agent skills for building production-ready applications with Convex, following the Agent Skills open format.
 
-## Project Structure
+See [AGENTS.md](AGENTS.md) for detailed agent instructions.
 
-```
-convex/           # Convex backend directory
-├── _generated/   # Auto-generated (DO NOT EDIT)
-├── schema.ts     # Database schema definition
-└── *.ts         # Function files (queries, mutations, actions)
-src/              # Frontend code
-```
+## Available Skills
 
-## Key Technologies
+| Skill | Description |
+|-------|-------------|
+| [convex-best-practices](skills/convex-best-practices/SKILL.md) | Guidelines for building production-ready Convex apps |
+| [convex-functions](skills/convex-functions/SKILL.md) | Writing queries, mutations, actions, and HTTP actions |
+| [convex-realtime](skills/convex-realtime/SKILL.md) | Patterns for building reactive applications |
+| [convex-schema-validator](skills/convex-schema-validator/SKILL.md) | Database schema definition and validation |
+| [convex-file-storage](skills/convex-file-storage/SKILL.md) | File upload, storage, and serving |
+| [convex-agents](skills/convex-agents/SKILL.md) | Building AI agents with Convex |
+| [convex-cron-jobs](skills/convex-cron-jobs/SKILL.md) | Scheduled functions and background tasks |
+| [convex-http-actions](skills/convex-http-actions/SKILL.md) | HTTP endpoints and webhook handling |
+| [convex-migrations](skills/convex-migrations/SKILL.md) | Schema evolution and data migrations |
+| [convex-security-check](skills/convex-security-check/SKILL.md) | Quick security audit checklist |
+| [convex-security-audit](skills/convex-security-audit/SKILL.md) | Deep security review patterns |
+| [convex-component-authoring](skills/convex-component-authoring/SKILL.md) | Creating reusable Convex components |
 
-- **Convex** - Real-time database and serverless functions
-- **TypeScript** - Type-safe development
-- **React** - Frontend framework (if applicable)
-
-## Convex Guidelines
+## Key Convex Concepts
 
 ### Function Types
 
@@ -27,13 +30,15 @@ src/              # Frontend code
 | `query` | Read data | Read-only | No |
 | `mutation` | Write data | Read/Write | No |
 | `action` | Integrations | Via runQuery/runMutation | Yes |
+| `httpAction` | HTTP endpoints | Via runQuery/runMutation | Yes |
 
-### Best Practices
+### Core Principles
 
 1. **Always use validators** for arguments and returns
-2. **Use indexes** instead of filters
-3. **Make mutations idempotent**
+2. **Use indexes** instead of filters for queries
+3. **Make mutations idempotent** with early returns
 4. **Use internal functions** for sensitive operations
+5. **Batch operations** for large datasets
 
 ### Code Pattern
 
@@ -50,22 +55,6 @@ export const myQuery = query({
 });
 ```
 
-## Commands
-
-```bash
-# Start development
-npx convex dev
-
-# Open dashboard
-npx convex dashboard
-
-# View logs
-npx convex logs
-
-# Generate types
-npx convex codegen
-```
-
 ## DO NOT
 
 - Run `npx convex deploy` without explicit instruction
@@ -73,32 +62,12 @@ npx convex codegen
 - Edit files in `convex/_generated/`
 - Use `filter()` instead of `withIndex()`
 
-## Schema
-
-<!-- Schema will be auto-populated if using npx convex claude-init -->
-
-Tables defined in `convex/schema.ts`:
-- Check schema.ts for current table definitions
-
-## Functions
-
-<!-- Functions will be auto-populated if using npx convex claude-init -->
-
-Available functions in `convex/`:
-- Check convex/ directory for current functions
-
 ## Documentation
 
 - Convex Docs: https://docs.convex.dev/
 - LLMs.txt: https://docs.convex.dev/llms.txt
 - Best Practices: https://docs.convex.dev/understanding/best-practices/
 
-## Team Recommendation
+## License
 
-Consider implementing `npx convex claude-init` to auto-generate this file with:
-- Actual table names from schema introspection
-- Function signatures from convex/ directory
-- Configured components
-- Environment variable placeholders
-
-Convex has schema introspection capabilities that could populate this template automatically.
+Apache-2.0

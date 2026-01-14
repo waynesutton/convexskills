@@ -1,152 +1,115 @@
-# Convex Agents
+# Convex Skills
 
-Specification for AI agents built on Convex for persistent, stateful workflows.
+Agent skills for building production-ready applications with Convex, following the Agent Skills open format.
 
 ## Overview
 
-Convex Agents are AI-powered assistants that leverage Convex's real-time database and functions to provide:
+This repository contains packaged instructions that help AI coding agents understand and implement Convex best practices. Skills are automatically invoked when relevant to your task.
 
-- **Persistent Conversations** - Thread history survives restarts
-- **Real-time Updates** - Stream responses to clients automatically
-- **Tool Execution** - Run Convex functions as agent capabilities
-- **Durable Workflows** - Long-running tasks with reliability
-- **Built-in RAG** - Vector search for knowledge retrieval
+## Available Skills
 
-## Architecture
+| Skill                                                                    | Description                                           |
+| ------------------------------------------------------------------------ | ----------------------------------------------------- |
+| [convex-best-practices](skills/convex-best-practices/SKILL.md)           | Guidelines for building production-ready Convex apps  |
+| [convex-functions](skills/convex-functions/SKILL.md)                     | Writing queries, mutations, actions, and HTTP actions |
+| [convex-realtime](skills/convex-realtime/SKILL.md)                       | Patterns for building reactive applications           |
+| [convex-schema-validator](skills/convex-schema-validator/SKILL.md)       | Database schema definition and validation             |
+| [convex-file-storage](skills/convex-file-storage/SKILL.md)               | File upload, storage, and serving                     |
+| [convex-agents](skills/convex-agents/SKILL.md)                           | Building AI agents with Convex                        |
+| [convex-cron-jobs](skills/convex-cron-jobs/SKILL.md)                     | Scheduled functions and background tasks              |
+| [convex-http-actions](skills/convex-http-actions/SKILL.md)               | HTTP endpoints and webhook handling                   |
+| [convex-migrations](skills/convex-migrations/SKILL.md)                   | Schema evolution and data migrations                  |
+| [convex-security-check](skills/convex-security-check/SKILL.md)           | Quick security audit checklist                        |
+| [convex-security-audit](skills/convex-security-audit/SKILL.md)           | Deep security review patterns                         |
+| [convex-component-authoring](skills/convex-component-authoring/SKILL.md) | Creating reusable Convex components                   |
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                      Convex Agent                           │
-├─────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
-│  │   Threads   │  │   Tools     │  │   Knowledge Base    │ │
-│  │  Management │  │  Registry   │  │   (Vector Store)    │ │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘ │
-├─────────────────────────────────────────────────────────────┤
-│                    Convex Database                          │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
-│  │   threads   │  │  messages   │  │     documents       │ │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-```
+## Skill Format
 
-## Capabilities
+Each skill follows the Agent Skills specification with YAML frontmatter:
 
-### Thread Management
+```markdown
+---
+name: skill-name
+description: What the skill does and when to use it
+version: 1.0.0
+author: Convex
+tags: [convex, ...]
+---
 
-- Create and manage conversation threads
-- Store message history persistently
-- Support multiple concurrent conversations
-- Thread metadata and tagging
+# Skill Name
 
-### Tool Integration
+## Documentation Sources
 
-- Define custom tools as Convex functions
-- Type-safe tool arguments and returns
-- Automatic tool result handling
-- Tool execution logging
+Links to official documentation
 
-### Streaming Responses
+## Instructions
 
-- Real-time token streaming to clients
-- Partial response updates
-- Streaming progress indicators
-- Graceful error handling
+Step-by-step guidance
 
-### RAG Patterns
+## Examples
 
-- Vector embeddings for documents
-- Semantic search across knowledge base
-- Context injection into prompts
-- Citation and source tracking
-
-### Workflow Orchestration
-
-- Multi-step agent workflows
-- Conditional branching
-- Parallel task execution
-- Workflow state persistence
-
-## Integration
-
-### Installation
-
-```bash
-npm install @convex-dev/agent ai openai
-```
-
-### Basic Setup
-
-```typescript
-// convex/agent.ts
-import { Agent } from "@convex-dev/agent";
-import { components } from "./_generated/api";
-import { OpenAI } from "openai";
-
-const openai = new OpenAI();
-
-export const agent = new Agent(components.agent, {
-  chat: openai.chat,
-  textEmbedding: openai.embeddings,
-});
-```
-
-### Using the Agent
-
-```typescript
-// Create thread
-const threadId = await agent.createThread(ctx, { userId });
-
-// Send message
-const response = await agent.chat(ctx, {
-  threadId,
-  messages: [{ role: "user", content: "Hello" }],
-  tools: [myTool],
-});
-```
-
-## Schema Requirements
-
-```typescript
-// convex/schema.ts
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
-
-export default defineSchema({
-  threads: defineTable({
-    userId: v.id("users"),
-    title: v.string(),
-    metadata: v.optional(v.any()),
-  }).index("by_user", ["userId"]),
-
-  messages: defineTable({
-    threadId: v.id("threads"),
-    role: v.union(v.literal("user"), v.literal("assistant")),
-    content: v.string(),
-    createdAt: v.number(),
-  }).index("by_thread", ["threadId"]),
-
-  documents: defineTable({
-    content: v.string(),
-    embedding: v.array(v.float64()),
-    metadata: v.any(),
-  }).vectorIndex("by_embedding", {
-    vectorField: "embedding",
-    dimensions: 1536,
-  }),
-});
-```
+Code examples
 
 ## Best Practices
 
-1. **Store all conversations** - Never rely on in-memory state
-2. **Use streaming** - Better UX for long responses
-3. **Implement tools wisely** - Keep tools focused and atomic
-4. **Handle errors gracefully** - Provide meaningful error messages
-5. **Log tool usage** - Track what agents do for debugging
+Guidelines and patterns
 
 ## References
 
-- Convex AI Documentation: https://docs.convex.dev/ai
-- Convex Agent Component: https://www.npmjs.com/package/@convex-dev/agent
+Additional resources
+```
+
+## Usage
+
+Skills are automatically available once installed. The agent will use them when relevant tasks are detected.
+
+**Examples:**
+
+```
+Help me set up file uploads in Convex
+```
+
+```
+Create a cron job to clean up expired sessions
+```
+
+```
+Add a Stripe webhook endpoint
+```
+
+## Key Convex Concepts
+
+### Function Types
+
+| Type         | Purpose        | Database                 | External APIs |
+| ------------ | -------------- | ------------------------ | ------------- |
+| `query`      | Read data      | Read-only                | No            |
+| `mutation`   | Write data     | Read/Write               | No            |
+| `action`     | Integrations   | Via runQuery/runMutation | Yes           |
+| `httpAction` | HTTP endpoints | Via runQuery/runMutation | Yes           |
+
+### Core Principles
+
+1. **Always use validators** for arguments and returns
+2. **Use indexes** instead of filters for queries
+3. **Make mutations idempotent** with early returns
+4. **Use internal functions** for sensitive operations
+5. **Batch operations** for large datasets
+
+## DO NOT
+
+- Run `npx convex deploy` without explicit instruction
+- Run any git commands without explicit instruction
+- Edit files in `convex/_generated/`
+- Use `filter()` instead of `withIndex()`
+
+## References
+
+- Convex Documentation: https://docs.convex.dev/
 - Convex LLMs.txt: https://docs.convex.dev/llms.txt
+- Best Practices: https://docs.convex.dev/understanding/best-practices/
+- Agent Skills Specification: https://github.com/anthropics/skills
+
+## License
+
+Apache-2.0

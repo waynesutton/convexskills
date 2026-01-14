@@ -1,6 +1,6 @@
 # Convex Skills
 
-A collection of AI-consumable skills for building production-ready applications with [Convex](https://convex.dev).
+A collection of AI-consumable skills for building production-ready applications with [Convex](https://convex.dev), following the Agent Skills open format.
 
 ## Overview
 
@@ -11,7 +11,11 @@ This repository contains skills that help AI assistants understand and implement
 ### Claude Code (via Marketplace)
 
 ```bash
-# Coming soon - will be available in Claude Code Marketplace
+# Add the marketplace
+claude plugin marketplace add get-convex/convex-skills
+
+# Install the plugin
+claude plugin install convex-skills
 ```
 
 ### Claude Code (from local clone)
@@ -22,27 +26,71 @@ cd convex-skills
 # Point Claude Code to this directory
 ```
 
+### Codex
+
+Follow the Codex skills guide and place the skill under `$CODEX_HOME/skills`:
+
+```bash
+# From the repo root
+# Defaults to ~/.codex if CODEX_HOME is unset
+cp -r skills/convex-best-practices "$CODEX_HOME/skills/"
+```
+
+Codex will auto-discover `SKILL.md` files in that directory on the next start.
+
+### OpenCode
+
+OpenCode discovers skills from `~/.claude/skills/<name>/SKILL.md` automatically. See OpenCode Skills docs for more details.
+
 ### Manual Installation
 
 Copy the desired skill's `SKILL.md` file to your project's `.claude/skills/` directory.
 
 ## Available Skills
 
-| Skill | Description |
-|-------|-------------|
-| [convex-best-practices](skills/convex-best-practices/SKILL.md) | Guidelines for building production-ready Convex apps |
-| [convex-functions](skills/convex-functions/SKILL.md) | Writing queries, mutations, actions, and HTTP actions |
-| [convex-realtime](skills/convex-realtime/SKILL.md) | Patterns for building reactive applications |
-| [convex-schema-validator](skills/convex-schema-validator/SKILL.md) | Database schema definition and validation |
-| [convex-file-storage](skills/convex-file-storage/SKILL.md) | File upload, storage, and serving |
-| [convex-agents](skills/convex-agents/SKILL.md) | Building AI agents with Convex |
-| [convex-security-check](skills/convex-security-check/SKILL.md) | Quick security audit checklist |
-| [convex-security-audit](skills/convex-security-audit/SKILL.md) | Deep security review patterns |
-| [convex-component-authoring](skills/convex-component-authoring/SKILL.md) | Creating reusable Convex components |
+| Skill                                                                    | Description                                           |
+| ------------------------------------------------------------------------ | ----------------------------------------------------- |
+| [convex-best-practices](skills/convex-best-practices/SKILL.md)           | Guidelines for building production-ready Convex apps  |
+| [convex-functions](skills/convex-functions/SKILL.md)                     | Writing queries, mutations, actions, and HTTP actions |
+| [convex-realtime](skills/convex-realtime/SKILL.md)                       | Patterns for building reactive applications           |
+| [convex-schema-validator](skills/convex-schema-validator/SKILL.md)       | Database schema definition and validation             |
+| [convex-file-storage](skills/convex-file-storage/SKILL.md)               | File upload, storage, and serving                     |
+| [convex-agents](skills/convex-agents/SKILL.md)                           | Building AI agents with Convex                        |
+| [convex-cron-jobs](skills/convex-cron-jobs/SKILL.md)                     | Scheduled functions and background tasks              |
+| [convex-http-actions](skills/convex-http-actions/SKILL.md)               | HTTP endpoints and webhook handling                   |
+| [convex-migrations](skills/convex-migrations/SKILL.md)                   | Schema evolution and data migrations                  |
+| [convex-security-check](skills/convex-security-check/SKILL.md)           | Quick security audit checklist                        |
+| [convex-security-audit](skills/convex-security-audit/SKILL.md)           | Deep security review patterns                         |
+| [convex-component-authoring](skills/convex-component-authoring/SKILL.md) | Creating reusable Convex components                   |
+
+## Repository Structure
+
+```
+convex-skills/
+├── skills/
+│   ├── convex-best-practices/
+│   │   └── SKILL.md
+│   ├── convex-functions/
+│   │   └── SKILL.md
+│   ├── convex-cron-jobs/
+│   │   └── SKILL.md
+│   ├── convex-http-actions/
+│   │   └── SKILL.md
+│   ├── convex-migrations/
+│   │   └── SKILL.md
+│   └── ...
+├── prds/
+│   └── future-skills-exploration.md
+├── AGENTS.md                 # Agent-facing documentation
+├── CLAUDE.md                 # Claude configuration
+├── GEMINI.md                 # Gemini CLI integration
+├── README.md                 # This file
+└── LICENSE                   # Apache-2.0
+```
 
 ## Skill Format
 
-Each skill follows the [Anthropic Skills Template](https://github.com/anthropics/skills/blob/main/template/SKILL.md) format:
+Each skill follows the Agent Skills specification:
 
 ```markdown
 ---
@@ -56,33 +104,95 @@ tags: [convex, ...]
 # Skill Name
 
 ## Documentation Sources
+
 ## Instructions
+
 ## Examples
+
 ## Best Practices
+
 ## References
+```
+
+## Usage
+
+Skills are automatically available once installed. The agent will use them when relevant tasks are detected.
+
+**Examples:**
+
+```
+Help me set up file uploads in Convex
+```
+
+```
+Create a cron job to clean up expired sessions
+```
+
+```
+Add a webhook endpoint for Stripe
+```
+
+## Creating New Skills
+
+Skills follow the Agent Skills specification. Each skill requires a `SKILL.md` file with YAML frontmatter.
+
+### Skill Template
+
+Create a new directory under `skills/`:
+
+```
+skills/my-skill/
+└── SKILL.md
+```
+
+**SKILL.md format:**
+
+```markdown
+---
+name: my-skill
+description: A clear description of what this skill does
+version: 1.0.0
+author: Convex
+tags: [convex, relevant-tags]
+---
+
+# My Skill Name
+
+## Documentation Sources
+
+Links to official documentation
+
+## Instructions
+
+Step-by-step guidance for the agent
+
+## Examples
+
+Concrete examples showing expected code patterns
+
+## Best Practices
+
+Specific rules to follow
+
+## References
+
+Additional resources
 ```
 
 ## AI Integration Files
 
-- `CLAUDE.md` - Default Claude configuration for Convex projects
+- `AGENTS.md` - Agent-facing documentation
+- `CLAUDE.md` - Claude configuration for Convex projects
 - `GEMINI.md` - Gemini CLI integration for Convex projects
-- `agents.md` - Convex agents specification
-
-## OpenCode Plugin
-
-See the [opencode-plugin](opencode-plugin/) directory for the OpenCode integration package.
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on contributing to this repository.
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+Apache-2.0 License - see [LICENSE](LICENSE) for details.
 
 ## References
 
 - [Convex Documentation](https://docs.convex.dev/)
 - [Convex LLMs.txt](https://docs.convex.dev/llms.txt)
-- [Anthropic Skills](https://github.com/anthropics/skills)
-# convexskills
+- [Agent Skills Specification](https://github.com/anthropics/skills)
+- [Vercel Agent Skills](https://github.com/vercel-labs/agent-skills)
+- [Sentry Skills](https://github.com/getsentry/skills)

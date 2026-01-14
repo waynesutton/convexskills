@@ -9,6 +9,7 @@ This document explores potential future skills that could help developers build 
 Full-text and vector search patterns for Convex applications.
 
 **Topics to cover:**
+
 - Full-text search indexes
 - Vector embeddings and similarity search
 - Hybrid search strategies
@@ -19,11 +20,14 @@ Full-text and vector search patterns for Convex applications.
 
 ---
 
-### 2. Convex Cron Jobs
+### 2. Convex Cron Jobs [COMPLETED]
 
 Scheduled function patterns for background tasks.
 
-**Topics to cover:**
+**Status:** Skill created at `skills/convex-cron-jobs/SKILL.md`
+
+**Topics covered:**
+
 - Cron expression syntax
 - Interval-based scheduling
 - Job retry strategies
@@ -34,11 +38,14 @@ Scheduled function patterns for background tasks.
 
 ---
 
-### 3. Convex HTTP Actions
+### 3. Convex HTTP Actions [COMPLETED]
 
 External API integration and webhook handling.
 
-**Topics to cover:**
+**Status:** Skill created at `skills/convex-http-actions/SKILL.md`
+
+**Topics covered:**
+
 - HTTP endpoint routing
 - Request/response handling
 - Authentication for HTTP actions
@@ -54,6 +61,7 @@ External API integration and webhook handling.
 Cursor-based pagination for large datasets.
 
 **Topics to cover:**
+
 - Cursor-based vs offset pagination
 - usePaginatedQuery hook
 - Infinite scroll implementation
@@ -64,11 +72,14 @@ Cursor-based pagination for large datasets.
 
 ---
 
-### 5. Convex Migrations
+### 5. Convex Migrations [COMPLETED]
 
 Schema migration strategies for evolving applications.
 
-**Topics to cover:**
+**Status:** Skill created at `skills/convex-migrations/SKILL.md`
+
+**Topics covered:**
+
 - Adding new fields (optional first)
 - Backfilling data
 - Removing deprecated fields
@@ -76,6 +87,7 @@ Schema migration strategies for evolving applications.
 - Zero-downtime migrations
 
 **Documentation:** https://docs.convex.dev/database/schemas
+**Documentation:** https://stack.convex.dev/migrate-data-postgres-to-convex
 
 ---
 
@@ -84,6 +96,7 @@ Schema migration strategies for evolving applications.
 Unit and integration testing patterns.
 
 **Topics to cover:**
+
 - Testing queries and mutations
 - Mocking Convex context
 - Integration test setup
@@ -99,6 +112,7 @@ Unit and integration testing patterns.
 Rate limiting patterns for API protection.
 
 **Topics to cover:**
+
 - Token bucket algorithm
 - Sliding window counters
 - Per-user rate limits
@@ -112,6 +126,7 @@ Rate limiting patterns for API protection.
 Multi-tenant architecture patterns.
 
 **Topics to cover:**
+
 - Tenant isolation strategies
 - Shared vs dedicated tables
 - Cross-tenant queries
@@ -125,6 +140,7 @@ Multi-tenant architecture patterns.
 Outbound webhook patterns for integrations.
 
 **Topics to cover:**
+
 - Webhook event design
 - Retry logic for failed webhooks
 - Webhook signature generation
@@ -138,6 +154,7 @@ Outbound webhook patterns for integrations.
 Real-time streaming patterns beyond subscriptions.
 
 **Topics to cover:**
+
 - Server-sent events
 - WebSocket alternatives
 - Stream backpressure
@@ -167,18 +184,18 @@ Based on review of [awesome-claude-skills](https://github.com/travisvn/awesome-c
 
 ## Prioritization Matrix
 
-| Skill | Developer Impact | Implementation Effort | Priority |
-|-------|-----------------|----------------------|----------|
-| Convex Search | High | Medium | P1 |
-| Convex Cron Jobs | High | Low | P1 |
-| Convex Pagination | High | Low | P1 |
-| Convex HTTP Actions | Medium | Low | P2 |
-| Convex Testing | High | Medium | P2 |
-| Convex Migrations | Medium | Medium | P2 |
-| Convex Rate Limiting | Medium | Medium | P3 |
-| Convex Multi-tenancy | Low | High | P3 |
-| Convex Webhooks | Medium | Medium | P3 |
-| Convex Streaming | Low | Medium | P3 |
+| Skill                | Developer Impact | Implementation Effort | Priority | Status    |
+| -------------------- | ---------------- | --------------------- | -------- | --------- |
+| Convex Search        | High             | Medium                | P1       | Pending   |
+| Convex Cron Jobs     | High             | Low                   | P1       | COMPLETED |
+| Convex Pagination    | High             | Low                   | P1       | Pending   |
+| Convex HTTP Actions  | Medium           | Low                   | P2       | COMPLETED |
+| Convex Testing       | High             | Medium                | P2       | Pending   |
+| Convex Migrations    | Medium           | Medium                | P2       | COMPLETED |
+| Convex Rate Limiting | Medium           | Medium                | P3       | Pending   |
+| Convex Multi-tenancy | Low              | High                  | P3       | Pending   |
+| Convex Webhooks      | Medium           | Medium                | P3       | Pending   |
+| Convex Streaming     | Low              | Medium                | P3       | Pending   |
 
 ---
 
