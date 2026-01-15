@@ -1,0 +1,48 @@
+{
+  "name": "@waynesutton/convex-skills",
+  "version": "1.0.0",
+  "description": "Agent skills for building production-ready Convex applications. Includes best practices, functions, realtime patterns, schema validation, file storage, security audits, and more.",
+  "author": "Wayne Sutton",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waynesutton/convexskills.git"
+  },
+  "homepage": "https://github.com/waynesutton/convexskills#readme",
+  "bugs": {
+    "url": "https://github.com/waynesutton/convexskills/issues"
+  },
+  "keywords": [
+    "convex",
+    "convex-skills",
+    "ai-skills",
+    "agent-skills",
+    "claude",
+    "codex",
+    "llm",
+    "ai-assistant",
+    "best-practices",
+    "developer-tools"
+  ],
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "convex-skills": "./bin/cli.js"
+  },
+  "files": [
+    "skills/**/*.md",
+    "templates/**/*.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    "index.js",
+    "bin/"
+  ],
+  "scripts": {
+    "prepublishOnly": "echo 'Publishing convex-skills to npm...'",
+    "postpublish": "echo 'Published successfully!'"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

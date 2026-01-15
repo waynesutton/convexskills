@@ -1,4 +1,7 @@
-# Convex (unoffical) Skills v1
+# Convex (unofficial) Skills v1
+
+[![npm version](https://img.shields.io/npm/v/@waynesutton/convex-skills.svg)](https://www.npmjs.com/package/@waynesutton/convex-skills)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
 A collection of AI-consumable skills for building production-ready applications with [Convex](https://convex.dev), following the Agent Skills open format.
 
@@ -8,21 +11,53 @@ This repository contains skills that help AI assistants understand and implement
 
 ## Installation
 
-### Claude Code (via Marketplace)
+### npm (recommended)
 
 ```bash
-# Add the marketplace
-claude plugin marketplace add get-convex/skills
+# Install globally for CLI access
+npm install -g @waynesutton/convex-skills
 
-# Install the plugin
-claude plugin install convex-skills
+# List available skills
+convex-skills list
+
+# Install a specific skill to your project
+convex-skills install convex-best-practices
+
+# Install all skills
+convex-skills install-all
+
+# Install templates (CLAUDE.md + skill templates)
+convex-skills install-templates
+```
+
+Or use npx without installing:
+
+```bash
+npx @waynesutton/convex-skills list
+npx @waynesutton/convex-skills install-all
+```
+
+### Programmatic Usage
+
+```bash
+npm install @waynesutton/convex-skills
+```
+
+```javascript
+import { listSkills, getSkill, SKILLS } from "@waynesutton/convex-skills";
+
+// List all skills
+console.log(listSkills());
+
+// Get a specific skill's content
+const content = getSkill("convex-best-practices");
 ```
 
 ### Claude Code (from local clone)
 
 ```bash
-git clone https://github.com/get-convex/skills.git
-cd skills
+git clone https://github.com/waynesutton/convexskills.git
+cd convexskills
 # Point Claude Code to this directory
 ```
 
@@ -216,6 +251,7 @@ Apache-2.0 License - see [LICENSE](LICENSE) for details.
 
 ## References
 
+- [npm Package](https://www.npmjs.com/package/@waynesutton/convex-skills)
 - [Convex Documentation](https://docs.convex.dev/)
 - [Convex LLMs.txt](https://docs.convex.dev/llms.txt)
 - [Agent Skills Specification](https://github.com/anthropics/skills)

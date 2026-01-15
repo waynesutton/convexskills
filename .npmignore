@@ -1,0 +1,21 @@
+# Development files
+.cursor/
+.claude/
+.claude-plugin/
+.opencode/
+prds/
+
+# Git
+.git/
+.gitignore
+
+# Documentation (not needed in package)
+docs.md
+files.md
+task.md
+changelog.md
+CONTRIBUTING.md
+
+# Local files
+*.log
+node_modules/
