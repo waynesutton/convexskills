@@ -1,4 +1,4 @@
-# Convex Skills
+# Convex (unoffical) Skills
 
 A collection of AI-consumable skills for building production-ready applications with [Convex](https://convex.dev), following the Agent Skills open format.
 
