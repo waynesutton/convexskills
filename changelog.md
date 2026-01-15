@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `templates/skills/gitrules.md`: Git safety protocols template
 - `files.md`: Codebase structure reference
 - `task.md`: Completed task tracking
+- `docs.md`: Documentation index
+
+### Changed
+
+- Updated `README.md` with templates section and repository structure
 
 ## [1.0.0] - 2026-01-14
 

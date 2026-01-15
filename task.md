@@ -14,6 +14,7 @@ Completed tasks and changes for this project.
 - [x] Created `files.md` with codebase structure
 - [x] Created `task.md` for task tracking
 - [x] Updated `changelog.md` with template skills addition
+- [x] Updated `README.md` with templates section and repository structure
 
 **Notes:**
 - Kept original `.claude/skills/` files untouched

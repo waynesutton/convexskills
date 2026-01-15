@@ -67,26 +67,51 @@ Copy the desired skill's `SKILL.md` file to your project's `.claude/skills/` dir
 
 ```
 convex-skills/
-├── skills/
+├── skills/                   # Core Convex skills for AI agents
 │   ├── convex-best-practices/
 │   │   └── SKILL.md
 │   ├── convex-functions/
 │   │   └── SKILL.md
 │   ├── convex-cron-jobs/
 │   │   └── SKILL.md
-│   ├── convex-http-actions/
-│   │   └── SKILL.md
-│   ├── convex-migrations/
-│   │   └── SKILL.md
 │   └── ...
-├── prds/
-│   └── future-skills-exploration.md
+├── templates/                # Templates for forking developers
+│   ├── CLAUDE.md             # Project context template
+│   └── skills/               # Claude Code skill templates
+│       ├── dev.md            # Full-stack development practices
+│       ├── help.md           # Problem-solving methodology
+│       └── gitrules.md       # Git safety protocols
+├── .claude/skills/           # Active skills for this repo
+├── prds/                     # Planning documents
 ├── AGENTS.md                 # Agent-facing documentation
 ├── CLAUDE.md                 # Claude configuration
 ├── GEMINI.md                 # Gemini CLI integration
 ├── README.md                 # This file
 └── LICENSE                   # Apache-2.0
 ```
+
+## Templates for Forking
+
+When you fork this repository, you can copy the templates to set up Claude Code skills for your project:
+
+```bash
+# Copy skill templates to your project
+cp -r templates/skills/* .claude/skills/
+
+# Or copy specific skills
+cp templates/skills/dev.md .claude/skills/
+cp templates/skills/help.md .claude/skills/
+cp templates/skills/gitrules.md .claude/skills/
+```
+
+| Template | Description |
+|----------|-------------|
+| [templates/CLAUDE.md](templates/CLAUDE.md) | Project context template for Convex projects |
+| [templates/skills/dev.md](templates/skills/dev.md) | Full-stack development practices |
+| [templates/skills/help.md](templates/skills/help.md) | Problem-solving methodology |
+| [templates/skills/gitrules.md](templates/skills/gitrules.md) | Git safety protocols |
+
+See [templates/skills/README.md](templates/skills/README.md) for detailed installation instructions.
 
 ## Skill Format
 
