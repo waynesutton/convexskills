@@ -1,4 +1,4 @@
-# Convex (unoffical) Skills
+# Convex (unoffical) Skills v1
 
 A collection of AI-consumable skills for building production-ready applications with [Convex](https://convex.dev), following the Agent Skills open format.
 
@@ -104,12 +104,12 @@ cp templates/skills/help.md .claude/skills/
 cp templates/skills/gitrules.md .claude/skills/
 ```
 
-| Template | Description |
-|----------|-------------|
-| [templates/CLAUDE.md](templates/CLAUDE.md) | Project context template for Convex projects |
-| [templates/skills/dev.md](templates/skills/dev.md) | Full-stack development practices |
-| [templates/skills/help.md](templates/skills/help.md) | Problem-solving methodology |
-| [templates/skills/gitrules.md](templates/skills/gitrules.md) | Git safety protocols |
+| Template                                                     | Description                                  |
+| ------------------------------------------------------------ | -------------------------------------------- |
+| [templates/CLAUDE.md](templates/CLAUDE.md)                   | Project context template for Convex projects |
+| [templates/skills/dev.md](templates/skills/dev.md)           | Full-stack development practices             |
+| [templates/skills/help.md](templates/skills/help.md)         | Problem-solving methodology                  |
+| [templates/skills/gitrules.md](templates/skills/gitrules.md) | Git safety protocols                         |
 
 See [templates/skills/README.md](templates/skills/README.md) for detailed installation instructions.
 
