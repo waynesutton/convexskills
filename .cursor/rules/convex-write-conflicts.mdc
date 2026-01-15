@@ -1,0 +1,771 @@
+---
+description: Guidelines for preventing write conflicts when using React, useEffect, and Convex
+globs: **/*.ts,**/*.tsx,**/*.js,**/*.jsx
+alwaysApply: true
+---
+
+# Preventing Write Conflicts in Convex with React
+
+Write conflicts occur when two functions running in parallel make conflicting changes to the same table or document. This rule provides patterns to avoid these conflicts.
+
+## Understanding Write Conflicts
+
+According to [Convex documentation](https://docs.convex.dev/error#1), write conflicts happen when:
+
+1. Multiple mutations update the same document concurrently
+2. A mutation reads data that changes during execution
+3. Mutations are called more rapidly than Convex can execute them
+
+Convex uses optimistic concurrency control and will retry mutations automatically, but will eventually fail permanently if conflicts persist.
+
+## Backend Protection: Idempotent Mutations
+
+### Always Make Mutations Idempotent
+
+Mutations should be safe to call multiple times with the same result.
+
+**Good Pattern:**
+
+```typescript
+export const completeTask = mutation({
+  args: { taskId: v.id("tasks") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const task = await ctx.db.get(args.taskId);
+
+    // Early return if document doesn't exist
+    if (!task) {
+      return null;
+    }
+
+    // Early return if already in desired state
+    if (task.status === "completed") {
+      return null;
+    }
+
+    // Only update if state change is needed
+    await ctx.db.patch(args.taskId, {
+      status: "completed",
+      completedAt: Date.now(),
+    });
+
+    return null;
+  },
+});
+```
+
+**Bad Pattern:**
+
+```typescript
+// This will cause conflicts if called multiple times rapidly
+export const completeTask = mutation({
+  args: { taskId: v.id("tasks") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const task = await ctx.db.get(args.taskId);
+    // No check if already completed
+    await ctx.db.patch(args.taskId, {
+      status: "completed",
+      completedAt: Date.now(),
+    });
+    return null;
+  },
+});
+```
+
+### Avoid Unnecessary Reads - Patch Directly
+
+When you only need to update fields, patch directly without reading first. Database operations throw if the document doesn't exist.
+
+**Good Pattern:**
+
+```typescript
+export const updateNote = mutation({
+  args: { id: v.id("notes"), content: v.string() },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    // Patch directly without reading first
+    // ctx.db.patch throws if document doesn't exist
+    await ctx.db.patch(args.id, { content: args.content });
+    return null;
+  },
+});
+```
+
+**Bad Pattern:**
+
+```typescript
+export const updateNote = mutation({
+  args: { id: v.id("notes"), content: v.string() },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    // Reading the document first creates a conflict window
+    const note = await ctx.db.get(args.id);
+    if (!note) throw new Error("Not found");
+
+    // When typing rapidly, multiple mutations fire
+    // Each reads the same version, then all try to write, causing conflicts
+    await ctx.db.patch(args.id, { content: args.content });
+    return null;
+  },
+});
+```
+
+### Minimize Data Reads
+
+Only read the data you need. Avoid querying entire tables when you only need specific documents.
+
+**Good Pattern:**
+
+```typescript
+export const updateUserCount = mutation({
+  args: { userId: v.id("users") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    // Only query tasks for this specific user
+    const tasks = await ctx.db
+      .query("tasks")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .collect();
+
+    await ctx.db.patch(args.userId, {
+      taskCount: tasks.length,
+    });
+
+    return null;
+  },
+});
+```
+
+**Bad Pattern:**
+
+```typescript
+export const updateUserCount = mutation({
+  args: { userId: v.id("users") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    // Reading entire table creates conflicts with any task change
+    const allTasks = await ctx.db.query("tasks").collect();
+    const userTasks = allTasks.filter((t) => t.userId === args.userId);
+
+    await ctx.db.patch(args.userId, {
+      taskCount: userTasks.length,
+    });
+
+    return null;
+  },
+});
+```
+
+### Use Indexes to Reduce Read Scope
+
+Always define and use indexes to limit the scope of data reads.
+
+```typescript
+// In schema.ts
+tasks: defineTable({
+  userId: v.string(),
+  status: v.string(),
+  content: v.string(),
+}).index("by_user", ["userId"])
+  .index("by_user_and_status", ["userId", "status"]),
+```
+
+## Frontend Protection: Preventing Duplicate Calls
+
+### Use Refs to Track Mutation Calls
+
+When mutations should only be called once per state change, use refs to track calls.
+
+**Good Pattern:**
+
+```typescript
+export function TimerComponent() {
+  const [session, setSession] = useState(null);
+  const hasCalledComplete = useRef(false);
+  const completeSession = useMutation(api.timer.completeSession);
+
+  useEffect(() => {
+    if (timeRemaining <= 0 && session && !hasCalledComplete.current) {
+      hasCalledComplete.current = true;
+      completeSession({ sessionId: session._id });
+    }
+  }, [timeRemaining, session, completeSession]);
+
+  // Reset ref when starting new session
+  const handleStartNewSession = async () => {
+    hasCalledComplete.current = false;
+    await startSession();
+  };
+
+  return <div>...</div>;
+}
+```
+
+**Bad Pattern:**
+
+```typescript
+export function TimerComponent() {
+  const [session, setSession] = useState(null);
+  const completeSession = useMutation(api.timer.completeSession);
+
+  useEffect(() => {
+    // This can be called multiple times if timeRemaining updates
+    if (timeRemaining <= 0 && session) {
+      completeSession({ sessionId: session._id });
+    }
+  }, [timeRemaining, session, completeSession]);
+
+  return <div>...</div>;
+}
+```
+
+### Debounce Rapid Mutations
+
+For user-triggered actions that can happen rapidly (typing, dragging), debounce the mutation calls. Recommended delay: 300-500ms.
+
+**Good Pattern:**
+
+```typescript
+import { useMutation } from "convex/react";
+import { useCallback } from "react";
+import debounce from "lodash/debounce";
+
+export function EditableNote() {
+  const updateNote = useMutation(api.notes.updateNote);
+
+  // Debounce updates to prevent conflicts during rapid typing (300-500ms)
+  const debouncedUpdate = useCallback(
+    debounce((noteId: Id<"notes">, content: string) => {
+      updateNote({ noteId, content });
+    }, 500), // 500ms delay recommended
+    [updateNote]
+  );
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const content = e.target.value;
+    setLocalContent(content);
+    debouncedUpdate(noteId, content);
+  };
+
+  return <textarea onChange={handleChange} value={localContent} />;
+}
+```
+
+### Avoid Calling Mutations in Loops
+
+Never call mutations inside loops without proper batching or rate limiting.
+
+**Good Pattern:**
+
+```typescript
+// Use a single mutation that handles batch updates
+export const updateMultipleTasks = mutation({
+  args: {
+    updates: v.array(
+      v.object({
+        taskId: v.id("tasks"),
+        completed: v.boolean(),
+      }),
+    ),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    for (const update of args.updates) {
+      const task = await ctx.db.get(update.taskId);
+      if (task && task.completed !== update.completed) {
+        await ctx.db.patch(update.taskId, {
+          completed: update.completed,
+        });
+      }
+    }
+    return null;
+  },
+});
+
+// Call once from frontend
+const updates = selectedTasks.map((task) => ({
+  taskId: task._id,
+  completed: true,
+}));
+await updateMultipleTasks({ updates });
+```
+
+**Bad Pattern:**
+
+```typescript
+// Calling mutation in a loop
+for (const task of selectedTasks) {
+  await updateTask({ taskId: task._id, completed: true });
+}
+```
+
+### Use Parallel Updates with Promise.all
+
+When updating multiple independent documents, use Promise.all for parallel writes instead of sequential loops.
+
+**Good Pattern:**
+
+```typescript
+export const reorderItems = mutation({
+  args: { itemIds: v.array(v.id("items")) },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    // Patch all items in parallel
+    const updates = args.itemIds.map((id, index) =>
+      ctx.db.patch(id, { order: index }),
+    );
+    await Promise.all(updates);
+    return null;
+  },
+});
+```
+
+**Bad Pattern:**
+
+```typescript
+export const reorderItems = mutation({
+  args: { itemIds: v.array(v.id("items")) },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    // Sequential reads and writes create conflict windows
+    for (let i = 0; i < args.itemIds.length; i++) {
+      const item = await ctx.db.get(args.itemIds[i]); // Read
+      await ctx.db.patch(args.itemIds[i], { order: i }); // Write
+    }
+    return null;
+  },
+});
+```
+
+### Check Mutation Status Before Calling Again
+
+Use the mutation's loading state to prevent duplicate calls.
+
+**Good Pattern:**
+
+```typescript
+export function TaskItem() {
+  const [isPending, setIsPending] = useState(false);
+  const toggleTask = useMutation(api.tasks.toggleTask);
+
+  const handleToggle = async () => {
+    if (isPending) return; // Prevent duplicate calls
+
+    setIsPending(true);
+    try {
+      await toggleTask({ taskId: task._id });
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  return (
+    <button onClick={handleToggle} disabled={isPending}>
+      {task.completed ? "Completed" : "Not completed"}
+    </button>
+  );
+}
+```
+
+## Schema Design to Avoid Conflicts
+
+### Use Event Records for High-Frequency Counters
+
+Instead of updating a counter on a document (which creates conflicts), create individual event records and aggregate them in queries.
+
+**Good Pattern:**
+
+```typescript
+// Separate view tracking documents
+export const trackView = mutation({
+  args: { pageId: v.id("pages") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    // Create individual view records instead
+    await ctx.db.insert("views", {
+      pageId: args.pageId,
+      timestamp: Date.now(),
+    });
+    return null;
+    // Aggregate views in a query or scheduled function
+  },
+});
+
+// Query to get view count
+export const getViewCount = query({
+  args: { pageId: v.id("pages") },
+  returns: v.number(),
+  handler: async (ctx, args) => {
+    const views = await ctx.db
+      .query("views")
+      .withIndex("by_page", (q) => q.eq("pageId", args.pageId))
+      .collect();
+    return views.length;
+  },
+});
+```
+
+**Bad Pattern:**
+
+```typescript
+// Global counter updated by all users - creates conflicts
+export const trackView = mutation({
+  args: { pageId: v.id("pages") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const page = await ctx.db.get(args.pageId);
+    if (!page) throw new Error("Not found");
+
+    // Many users updating the same document simultaneously
+    await ctx.db.patch(args.pageId, {
+      views: page.views + 1,
+    });
+    return null;
+  },
+});
+```
+
+### Minimize Document Updates
+
+Design your schema so frequently changing data is isolated.
+
+**Good Pattern:**
+
+```typescript
+// Separate frequently updated data
+sessions: defineTable({
+  userId: v.string(),
+  startTime: v.number(),
+}).index("by_user", ["userId"]),
+
+sessionMetrics: defineTable({
+  sessionId: v.id("sessions"),
+  remainingTime: v.number(),
+  status: v.string(),
+  lastUpdated: v.number(),
+}).index("by_session", ["sessionId"]),
+```
+
+**Bad Pattern:**
+
+```typescript
+// Mixing static and frequently updated data
+sessions: defineTable({
+  userId: v.string(),
+  startTime: v.number(),
+  // These fields update frequently and cause conflicts
+  remainingTime: v.number(),
+  status: v.string(),
+  lastUpdated: v.number(),
+}).index("by_user", ["userId"]),
+```
+
+### Use Single User Sessions
+
+For data like timers or active sessions, use a pattern where only one document per user exists.
+
+```typescript
+export const getActiveSession = query({
+  args: {},
+  returns: v.union(v.object({...}), v.null()),
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    return await ctx.db
+      .query("sessions")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .first();
+  },
+});
+
+export const startSession = mutation({
+  args: {},
+  returns: v.id("sessions"),
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    // Delete existing session first
+    const existing = await ctx.db
+      .query("sessions")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .first();
+
+    if (existing) {
+      await ctx.db.delete(existing._id);
+    }
+
+    return await ctx.db.insert("sessions", {
+      userId: identity.subject,
+      startTime: Date.now(),
+    });
+  },
+});
+```
+
+## Authorization Patterns
+
+When you need to verify ownership before updates, use these patterns to minimize conflicts:
+
+### Option A: Use Indexes for User-Scoped Queries
+
+```typescript
+export const updateNote = mutation({
+  args: {
+    id: v.id("notes"),
+    content: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthorized");
+
+    // Only query notes the user owns
+    const note = await ctx.db
+      .query("notes")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .filter((q) => q.eq(q.field("_id"), args.id))
+      .unique();
+
+    if (!note) throw new Error("Not found");
+    await ctx.db.patch(args.id, { content: args.content });
+    return null;
+  },
+});
+```
+
+### Option B: Internal Mutations with Schema-Level Security
+
+```typescript
+// Internal mutation with no auth check (fast, no conflicts)
+export const _updateNote = internalMutation({
+  args: { id: v.id("notes"), content: v.string() },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, { content: args.content });
+    return null;
+  },
+});
+
+// Public mutation with auth check
+export const updateNote = mutation({
+  args: { id: v.id("notes"), content: v.string() },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthorized");
+
+    const note = await ctx.db.get(args.id);
+    if (!note || note.userId !== identity.subject) {
+      throw new Error("Not found");
+    }
+
+    // Call internal mutation (no read before write)
+    await ctx.runMutation(internal.notes._updateNote, {
+      id: args.id,
+      content: args.content,
+    });
+    return null;
+  },
+});
+```
+
+## Monitoring Write Conflicts
+
+Check your Convex dashboard for:
+
+- **Insight Breakdown**: Shows which mutations are retrying due to conflicts
+- **Error Logs**: Permanent failures after retries
+- **Function Latency**: High latency may indicate frequent retries
+
+Regular monitoring helps you identify and fix conflict patterns early.
+
+## Checklist for Preventing Write Conflicts
+
+**Backend (Convex mutations):**
+
+- [ ] Make mutations idempotent with early returns
+- [ ] Patch directly without reading first when possible
+- [ ] Check if document exists before updating (only when necessary)
+- [ ] Check if update is needed (current state vs desired state)
+- [ ] Use indexed queries with selective filters
+- [ ] Avoid reading entire tables
+- [ ] Minimize the scope of data reads
+- [ ] Use Promise.all for parallel independent updates
+- [ ] Design schema to separate frequently updated fields
+- [ ] Use event records pattern for high-frequency counters
+- [ ] Consider internal mutations for auth-checked operations
+
+**Frontend (React components):**
+
+- [ ] Use refs to track one-time mutation calls
+- [ ] Reset refs when starting new operations
+- [ ] Debounce rapid user input mutations (300-500ms)
+- [ ] Check mutation loading state before calling again
+- [ ] Avoid calling mutations in loops
+- [ ] Batch multiple updates into single mutation calls
+- [ ] Use proper useEffect dependencies
+
+## Resources
+
+- [Convex Write Conflicts Documentation](https://docs.convex.dev/error#1)
+- [Optimistic Concurrency Control](https://docs.convex.dev/database/advanced/occ)
+- [Convex Best Practices](https://docs.convex.dev/understanding/best-practices/)
+
+## When Write Conflicts Are Acceptable
+
+Some write conflicts are expected and acceptable:
+
+- Very high-frequency updates (gaming leaderboards, live counters)
+- Genuinely concurrent user actions on the same resource
+- Temporary spikes in activity
+
+In these cases, ensure your mutations are idempotent and let Convex's retry mechanism handle the conflicts. Add user-facing retry logic if needed.
+
+## App-Specific Patterns: Markdown Blog
+
+This app uses specific patterns to avoid write conflicts in the `activeSessions` table for real-time visitor tracking.
+
+### Heartbeat Mutation with Dedup Window
+
+The `stats:heartbeat` mutation uses a 10-second dedup window to prevent rapid updates:
+
+```typescript
+// convex/stats.ts
+const HEARTBEAT_DEDUP_MS = 10 * 1000;
+
+export const heartbeat = mutation({
+  args: {
+    sessionId: v.string(),
+    currentPath: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const now = Date.now();
+
+    // Find existing session by sessionId using index
+    const existingSession = await ctx.db
+      .query("activeSessions")
+      .withIndex("by_sessionId", (q) => q.eq("sessionId", args.sessionId))
+      .first();
+
+    if (existingSession) {
+      // Early return if same path and recently updated (idempotent)
+      if (
+        existingSession.currentPath === args.currentPath &&
+        now - existingSession.lastSeen < HEARTBEAT_DEDUP_MS
+      ) {
+        return null;
+      }
+
+      // Patch directly with new data
+      await ctx.db.patch(existingSession._id, {
+        currentPath: args.currentPath,
+        lastSeen: now,
+      });
+      return null;
+    }
+
+    // Create new session only if none exists
+    await ctx.db.insert("activeSessions", {
+      sessionId: args.sessionId,
+      currentPath: args.currentPath,
+      lastSeen: now,
+    });
+
+    return null;
+  },
+});
+```
+
+### Frontend Debouncing with Refs
+
+The `usePageTracking` hook uses refs to prevent duplicate heartbeat calls:
+
+```typescript
+// src/hooks/usePageTracking.ts
+const HEARTBEAT_DEBOUNCE_MS = 5 * 1000;
+
+export function usePageTracking(): void {
+  const heartbeatMutation = useMutation(api.stats.heartbeat);
+
+  // Track heartbeat state to prevent duplicate calls
+  const isHeartbeatPending = useRef(false);
+  const lastHeartbeatTime = useRef(0);
+  const lastHeartbeatPath = useRef<string | null>(null);
+
+  const sendHeartbeat = useCallback(
+    async (path: string) => {
+      const sessionId = sessionIdRef.current;
+      if (!sessionId) return;
+
+      const now = Date.now();
+
+      // Skip if heartbeat is already pending
+      if (isHeartbeatPending.current) {
+        return;
+      }
+
+      // Skip if same path and sent recently (debounce)
+      if (
+        lastHeartbeatPath.current === path &&
+        now - lastHeartbeatTime.current < HEARTBEAT_DEBOUNCE_MS
+      ) {
+        return;
+      }
+
+      isHeartbeatPending.current = true;
+      lastHeartbeatTime.current = now;
+      lastHeartbeatPath.current = path;
+
+      try {
+        await heartbeatMutation({
+          sessionId,
+          currentPath: path,
+        });
+      } catch {
+        // Silently fail
+      } finally {
+        isHeartbeatPending.current = false;
+      }
+    },
+    [heartbeatMutation],
+  );
+
+  // Send heartbeat on interval and path change
+  useEffect(() => {
+    const path = location.pathname;
+    sendHeartbeat(path);
+
+    const intervalId = setInterval(() => {
+      sendHeartbeat(path);
+    }, HEARTBEAT_INTERVAL_MS);
+
+    return () => clearInterval(intervalId);
+  }, [location.pathname, sendHeartbeat]);
+}
+```
+
+### Key Patterns Used
+
+1. **Backend idempotency**: Early return when session was updated within 10 seconds with same path
+2. **Frontend debouncing**: 5-second debounce window using refs
+3. **Pending state tracking**: `isHeartbeatPending` ref prevents overlapping calls
+4. **Indexed queries**: Uses `by_sessionId` index for efficient lookups
+5. **Event records pattern**: Page views use `pageViews` table instead of counters
+
+## Summary
+
+**Key Takeaway:** The less you read before writing, the fewer conflicts you'll have. Design your mutations to write directly when possible, and structure your data model to avoid concurrent writes to the same documents.
+
+**Priority actions:**
+
+1. Patch directly without reading first (most common fix)
+2. Use indexed queries to minimize read scope
+3. Debounce rapid user inputs (300-500ms for typing, 5s for heartbeats)
+4. Use event records for high-frequency counters
+5. Add backend dedup windows for idempotency (10s for heartbeats)
+6. Use refs to track pending mutations and prevent duplicates
+7. Monitor your dashboard for conflict patterns
