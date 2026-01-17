@@ -131,6 +131,15 @@ Saying no to features is a skill. Here are templates:
 **To yourself:**
 > "Is this scratching my own itch or solving a real user problem? Would I bet the release date on this?"
 
+**To AI agents (Claude, Opus, Codex, Ralph, Cursor):**
+> "Stop. Before we add this feature, answer: Does this solve the core user problem we defined at the start of this session? If not, add it to a DEFERRED.md file and stay focused on the current scope."
+
+When working with AI coding agents:
+- State your scope constraints at the start of every session
+- Agents will suggest improvements. Most are out of scope.
+- Treat agent suggestions like stakeholder requests: apply the 48-hour rule
+- If an agent keeps pushing a feature, ask "Why?" three times to find the real need
+
 ## AI-Specific Guidelines
 
 When building AI-powered products, feature creep has extra risks:
@@ -215,11 +224,29 @@ Create a single source of truth for scope decisions:
 ```markdown
 ## Scope Decision Log
 
-| Date | Request | Decision | Rationale | Trade-off |
-|------|---------|----------|-----------|-----------|
-| 2025-01-15 | Add export to PDF | Deferred v2 | Not core to MVP | Would delay launch 2 weeks |
-| 2025-01-16 | Dark mode | Approved | User research shows demand | Removed social sharing |
+| Date | Request | Source | Decision | Rationale | Trade-off |
+|------|---------|--------|----------|-----------|-----------|
+| 2025-01-15 | Add export to PDF | PM | Deferred v2 | Not core to MVP | Would delay launch 2 weeks |
+| 2025-01-16 | Dark mode | User feedback | Approved | User research shows demand | Removed social sharing |
+| 2025-01-17 | Add caching layer | Claude | Deferred | Premature optimization | Stay focused on core feature |
+| 2025-01-17 | Refactor to hooks | Cursor | Rejected | Works fine as is | Technical scope creep |
 ```
+
+**Agents as Stakeholders:**
+AI coding agents are now stakeholders in your project. They have opinions. They make suggestions. Treat them like any other stakeholder:
+
+- **Log agent suggestions** in your scope decision log with the agent name as source
+- **Apply the same rigor** you would to a PM or executive request
+- **Agents optimize for different things** (code quality, patterns, completeness) than you might need right now
+- **"The agent suggested it" is not a valid reason** to add a feature
+
+Common agent-driven scope creep patterns:
+- "Let me also add error handling for edge cases you haven't hit yet"
+- "This would be cleaner with a refactor"
+- "You should probably add tests for this"
+- "Let me add TypeScript types for these additional scenarios"
+
+Each of these might be good ideas. None of them are your current scope unless you decide they are.
 
 ## Recovery: You're Already Bloated
 
