@@ -1,6 +1,0 @@
-{
-  "$schema": "https://opencode.ai/schemas/config.json",
-  "name": "markdown-publishing-framework",
-  "description": "AI-first markdown publishing with Convex real-time sync. Write markdown, run sync, content appears instantly.",
-  "version": "1.0.0"
-}

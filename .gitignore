@@ -22,6 +22,15 @@ Thumbs.db
 *.swp
 *.swo
 
+# Cursor plans (local only)
+.cursor/plans/
+
+# OpenCode config (local only)
+.opencode/
+
+# Local rules
+.cursor/rules/sec-check.mdc
+
 # Logs
 *.log
 npm-debug.log*
