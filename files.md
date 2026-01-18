@@ -35,6 +35,14 @@ Core Convex skills for AI agents.
 | `convex-security-audit/SKILL.md` | Deep security review patterns |
 | `convex-security-check/SKILL.md` | Quick security audit checklist |
 
+## Command Directory (`command/`)
+
+Slash command definitions for OpenCode integration.
+
+| File | Description |
+|------|-------------|
+| `convex.md` | `/convex` slash command entrypoint with decision trees |
+
 ## Templates Directory (`templates/`)
 
 Templates for developers to copy when forking.

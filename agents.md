@@ -77,6 +77,18 @@ Create a cron job to clean up expired sessions
 Add a Stripe webhook endpoint
 ```
 
+### Slash Command (OpenCode)
+
+Use the `/convex` slash command for contextual guidance:
+
+```
+/convex create a schema with users and posts
+/convex set up file uploads
+/convex add a Stripe webhook endpoint
+```
+
+The command file is located at `command/convex.md`.
+
 ## Key Convex Concepts
 
 ### Function Types

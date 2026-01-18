@@ -77,6 +77,22 @@ Codex will auto-discover `SKILL.md` files in that directory on the next start.
 
 OpenCode discovers skills from `~/.claude/skills/<name>/SKILL.md` automatically. See OpenCode Skills docs for more details.
 
+#### Slash Command
+
+This repo includes a `/convex` slash command for OpenCode. Install the command by copying `command/convex.md` to your OpenCode commands directory:
+
+```bash
+# Copy the slash command
+cp command/convex.md ~/.opencode/command/
+
+# Usage in OpenCode
+/convex create a schema with users and posts
+/convex set up file uploads
+/convex add a Stripe webhook endpoint
+```
+
+The slash command provides decision trees to route to the appropriate skill based on your task.
+
 ### Manual Installation
 
 Copy the desired skill's `SKILL.md` file to your project's `.claude/skills/` directory.
@@ -110,6 +126,8 @@ convex-skills/
 │   ├── convex-cron-jobs/
 │   │   └── SKILL.md
 │   └── ...
+├── command/                  # Slash command definitions (OpenCode)
+│   └── convex.md             # /convex command entrypoint
 ├── templates/                # Templates for forking developers
 │   ├── CLAUDE.md             # Project context template
 │   └── skills/               # Claude Code skill templates
