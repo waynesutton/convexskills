@@ -27,6 +27,9 @@ Thumbs.db
 .cursor/
 .opencode/
 
+# Local task tracking
+task.md
+
 # Logs
 *.log
 npm-debug.log*
