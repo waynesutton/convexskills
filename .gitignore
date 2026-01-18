@@ -22,14 +22,10 @@ Thumbs.db
 *.swp
 *.swo
 
-# Cursor plans (local only)
-.cursor/plans/
-
-# OpenCode config (local only)
+# Local config folders (not tracked)
+.claude/
+.cursor/
 .opencode/
-
-# Local rules
-.cursor/rules/sec-check.mdc
 
 # Logs
 *.log
