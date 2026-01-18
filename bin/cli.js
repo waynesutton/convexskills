@@ -71,11 +71,11 @@ function installSkill(skillName, targetDir) {
     process.exit(1);
   }
 
-  const targetPath = join(targetDir, ".claude", "skills", `${skillName}.md`);
-  const targetSkillsDir = dirname(targetPath);
+  const targetPath = join(targetDir, ".claude", "skills", skillName, "SKILL.md");
+  const targetSkillDir = dirname(targetPath);
 
-  if (!existsSync(targetSkillsDir)) {
-    mkdirSync(targetSkillsDir, { recursive: true });
+  if (!existsSync(targetSkillDir)) {
+    mkdirSync(targetSkillDir, { recursive: true });
   }
 
   copyFileSync(skillsPath, targetPath);
