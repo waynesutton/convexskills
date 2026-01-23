@@ -17,10 +17,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `files.md`: Codebase structure reference
 - `task.md`: Completed task tracking
 - `docs.md`: Documentation index
+- `skills/convex/SKILL.md`: Umbrella skill indexing all Convex skills
 
 ### Changed
 
 - Updated `README.md` with templates section and repository structure
+
+### Fixed
+
+- Skill `name` field now matches folder name for `/skill` commands to work
+  - Changed from human readable (e.g., `Convex Best Practices`) to kebab-case (e.g., `convex-best-practices`)
+  - Added `displayName` field for human readable names
+  - Affects all 12 Convex skill files
 
 ## [1.0.0] - 2026-01-14
 

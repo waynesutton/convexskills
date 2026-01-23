@@ -1,5 +1,6 @@
 ---
-name: Convex Migrations
+name: convex-migrations
+displayName: Convex Migrations
 description: Schema migration strategies for evolving applications including adding new fields, backfilling data, removing deprecated fields, index migrations, and zero-downtime migration patterns
 version: 1.0.0
 author: Convex

@@ -2,14 +2,22 @@
 
 import { fileURLToPath } from "url";
 import { dirname, join, resolve } from "path";
-import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync, readdirSync } from "fs";
+import {
+  readFileSync,
+  writeFileSync,
+  mkdirSync,
+  existsSync,
+  copyFileSync,
+  readdirSync,
+} from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const packageRoot = join(__dirname, "..");
 
 const SKILLS = {
-  "convex-best-practices": "Guidelines for building production-ready Convex apps",
+  "convex-best-practices":
+    "Guidelines for building production-ready Convex apps",
   "convex-functions": "Writing queries, mutations, actions, and HTTP actions",
   "convex-realtime": "Patterns for building reactive applications",
   "convex-schema-validator": "Database schema definition and validation",
@@ -50,7 +58,9 @@ EXAMPLES:
   convex-skills show convex-functions
 
 AVAILABLE SKILLS:
-${Object.entries(SKILLS).map(([name, desc]) => `  ${name.padEnd(30)} ${desc}`).join("\n")}
+${Object.entries(SKILLS)
+  .map(([name, desc]) => `  ${name.padEnd(30)} ${desc}`)
+  .join("\n")}
 `);
 }
 
@@ -64,14 +74,20 @@ function listSkills() {
 
 function installSkill(skillName, targetDir) {
   const skillsPath = join(packageRoot, "skills", skillName, "SKILL.md");
-  
+
   if (!existsSync(skillsPath)) {
     console.error(`Error: Skill not found: ${skillName}`);
     console.log("Run 'convex-skills list' to see available skills.");
     process.exit(1);
   }
 
-  const targetPath = join(targetDir, ".claude", "skills", skillName, "SKILL.md");
+  const targetPath = join(
+    targetDir,
+    ".claude",
+    "skills",
+    skillName,
+    "SKILL.md",
+  );
   const targetSkillDir = dirname(targetPath);
 
   if (!existsSync(targetSkillDir)) {
@@ -94,12 +110,14 @@ function installAllSkills(targetDir) {
     installSkill(skillName, targetDir);
   });
 
-  console.log(`\nDone! Installed ${skills.length} skills to ${join(targetDir, ".claude", "skills")}`);
+  console.log(
+    `\nDone! Installed ${skills.length} skills to ${join(targetDir, ".claude", "skills")}`,
+  );
 }
 
 function installTemplates(targetDir) {
   const templatesDir = join(packageRoot, "templates");
-  
+
   // Install CLAUDE.md template
   const claudeTemplate = join(templatesDir, "CLAUDE.md");
   if (existsSync(claudeTemplate)) {
@@ -115,9 +133,11 @@ function installTemplates(targetDir) {
   // Install skill templates
   const skillTemplatesDir = join(templatesDir, "skills");
   if (existsSync(skillTemplatesDir)) {
-    const templates = readdirSync(skillTemplatesDir).filter((f) => f.endsWith(".md"));
+    const templates = readdirSync(skillTemplatesDir).filter((f) =>
+      f.endsWith(".md"),
+    );
     const targetSkillsDir = join(targetDir, ".claude", "skills");
-    
+
     if (!existsSync(targetSkillsDir)) {
       mkdirSync(targetSkillsDir, { recursive: true });
     }
@@ -139,7 +159,7 @@ function installTemplates(targetDir) {
 
 function showSkill(skillName) {
   const skillsPath = join(packageRoot, "skills", skillName, "SKILL.md");
-  
+
   if (!existsSync(skillsPath)) {
     console.error(`Error: Skill not found: ${skillName}`);
     process.exit(1);
@@ -151,7 +171,7 @@ function showSkill(skillName) {
 
 function printSkillPath(skillName) {
   const skillsPath = join(packageRoot, "skills", skillName, "SKILL.md");
-  
+
   if (!existsSync(skillsPath)) {
     console.error(`Error: Skill not found: ${skillName}`);
     process.exit(1);
