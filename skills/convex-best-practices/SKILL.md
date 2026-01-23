@@ -1,5 +1,6 @@
 ---
-name: Convex Best Practices
+name: convex-best-practices
+displayName: Convex Best Practices
 description: Guidelines for building production-ready Convex apps covering function organization, query patterns, validation, TypeScript usage, error handling, and the Zen of Convex design philosophy
 version: 1.0.0
 author: Convex

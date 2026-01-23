@@ -1,5 +1,6 @@
 ---
-name: Convex Agents
+name: convex-agents
+displayName: Convex Agents
 description: Building AI agents with the Convex Agent component including thread management, tool integration, streaming responses, RAG patterns, and workflow orchestration
 version: 1.0.0
 author: Convex

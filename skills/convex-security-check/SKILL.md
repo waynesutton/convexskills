@@ -1,5 +1,6 @@
 ---
-name: Convex Security Check
+name: convex-security-check
+displayName: Convex Security Check
 description: Quick security audit checklist covering authentication, function exposure, argument validation, row-level access control, and environment variable handling
 version: 1.0.0
 author: Convex
