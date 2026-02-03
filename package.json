@@ -1,6 +1,6 @@
 {
   "name": "@waynesutton/convex-skills",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "Agent skills for building production-ready Convex applications. Includes best practices, functions, realtime patterns, schema validation, file storage, security audits, and more.",
   "author": "Wayne Sutton",
   "license": "Apache-2.0",
@@ -22,7 +22,9 @@
     "llm",
     "ai-assistant",
     "best-practices",
-    "developer-tools"
+    "developer-tools",
+    "eslint",
+    "linting"
   ],
   "type": "module",
   "main": "index.js",

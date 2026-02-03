@@ -59,7 +59,11 @@ convex/
 // QUERY: Read-only, reactive, cached. Use for fetching data.
 export const list = query({
   args: { limit: v.optional(v.number()) },
-  returns: v.array(v.object({ /* ... */ })),
+  returns: v.array(
+    v.object({
+      /* ... */
+    }),
+  ),
   handler: async (ctx, args) => {
     return await ctx.db.query("items").take(args.limit ?? 10);
   },
@@ -79,8 +83,12 @@ export const processExternal = action({
   args: { id: v.id("items") },
   handler: async (ctx, args) => {
     const data = await ctx.runQuery(internal.items.get, { id: args.id });
-    const result = await fetch("https://api.example.com", { /* ... */ });
-    await ctx.runMutation(internal.items.saveResult, { /* ... */ });
+    const result = await fetch("https://api.example.com", {
+      /* ... */
+    });
+    await ctx.runMutation(internal.items.saveResult, {
+      /* ... */
+    });
   },
 });
 ```
@@ -151,7 +159,9 @@ const posts = await ctx.db
 
 ```typescript
 export const myMutation = mutation({
-  args: { /* ... */ },
+  args: {
+    /* ... */
+  },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthenticated");
@@ -188,6 +198,17 @@ export const getUrl = query({
   handler: async (ctx, { storageId }) => await ctx.storage.getUrl(storageId),
 });
 ```
+
+## Linting
+
+This project uses @convex-dev/eslint-plugin for code quality. All Convex functions must:
+
+1. **Use object syntax** with `handler` property (not bare functions)
+2. **Include argument validators** - always have `args: {}` even when empty
+3. **Use explicit table names** - `db.get("table", id)` not `db.get(id)`
+4. **Respect runtime boundaries** - don't import "use node" files into Convex runtime
+
+Run `npx eslint convex/` to check compliance.
 
 ## IMPORTANT Rules
 
@@ -239,24 +260,31 @@ HTTP webhook/API? → httpAction()
 ### Validator Cheat Sheet
 
 ```typescript
-v.string()                    // string
-v.number()                    // number (float64)
-v.boolean()                   // boolean
-v.id("table")                 // Id<"table">
-v.null()                      // null
-v.optional(v.string())        // string | undefined (field can be missing)
-v.nullable(v.string())        // string | null (field must exist)
-v.array(v.string())           // string[]
-v.object({ k: v.string() })   // { k: string }
-v.union(v.literal("a"), v.literal("b"))  // "a" | "b"
-v.record(v.string(), v.number())  // { [key: string]: number }
+v.string(); // string
+v.number(); // number (float64)
+v.boolean(); // boolean
+v.id("table"); // Id<"table">
+v.null(); // null
+v.optional(v.string()); // string | undefined (field can be missing)
+v.nullable(v.string()); // string | null (field must exist)
+v.array(v.string()); // string[]
+v.object({ k: v.string() }); // { k: string }
+v.union(v.literal("a"), v.literal("b")); // "a" | "b"
+v.record(v.string(), v.number()); // { [key: string]: number }
 ```
 
 ### Import Patterns
 
 ```typescript
 // Function constructors
-import { query, mutation, action, internalQuery, internalMutation, internalAction } from "./_generated/server";
+import {
+  query,
+  mutation,
+  action,
+  internalQuery,
+  internalMutation,
+  internalAction,
+} from "./_generated/server";
 
 // API references
 import { api, internal } from "./_generated/api";

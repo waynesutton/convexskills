@@ -11,6 +11,17 @@ tags: [convex, best-practices, typescript, production, error-handling]
 
 Build production-ready Convex applications by following established patterns for function organization, query optimization, validation, TypeScript usage, and error handling.
 
+## Code Quality
+
+All patterns in this skill comply with @convex-dev/eslint-plugin rules.
+Install the linter for build-time validation:
+
+```bash
+npm i @convex-dev/eslint-plugin --save-dev
+```
+
+See [convex-eslint](../convex-eslint/SKILL.md) for configuration details.
+
 ## Documentation Sources
 
 Before implementing, do not assume; fetch the latest documentation:
@@ -41,14 +52,17 @@ import { v } from "convex/values";
 
 export const get = query({
   args: { userId: v.id("users") },
-  returns: v.union(v.object({
-    _id: v.id("users"),
-    _creationTime: v.number(),
-    name: v.string(),
-    email: v.string(),
-  }), v.null()),
+  returns: v.union(
+    v.object({
+      _id: v.id("users"),
+      _creationTime: v.number(),
+      name: v.string(),
+      email: v.string(),
+    }),
+    v.null(),
+  ),
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.userId);
+    return await ctx.db.get("users", args.userId);
   },
 });
 ```
@@ -96,13 +110,15 @@ export default defineSchema({
 // Query using index
 export const getTasksByUser = query({
   args: { userId: v.id("users") },
-  returns: v.array(v.object({
-    _id: v.id("tasks"),
-    _creationTime: v.number(),
-    userId: v.id("users"),
-    status: v.string(),
-    createdAt: v.number(),
-  })),
+  returns: v.array(
+    v.object({
+      _id: v.id("tasks"),
+      _creationTime: v.number(),
+      userId: v.id("users"),
+      status: v.string(),
+      createdAt: v.number(),
+    }),
+  ),
   handler: async (ctx, args) => {
     return await ctx.db
       .query("tasks")
@@ -127,16 +143,16 @@ export const updateTask = mutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const task = await ctx.db.get(args.taskId);
-    
+    const task = await ctx.db.get("tasks", args.taskId);
+
     if (!task) {
       throw new ConvexError({
         code: "NOT_FOUND",
         message: "Task not found",
       });
     }
-    
-    await ctx.db.patch(args.taskId, { title: args.title });
+
+    await ctx.db.patch("tasks", args.taskId, { title: args.title });
     return null;
   },
 });
@@ -152,14 +168,14 @@ export const completeTask = mutation({
   args: { taskId: v.id("tasks") },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const task = await ctx.db.get(args.taskId);
-    
+    const task = await ctx.db.get("tasks", args.taskId);
+
     // Early return if already complete (idempotent)
     if (!task || task.status === "completed") {
       return null;
     }
-    
-    await ctx.db.patch(args.taskId, {
+
+    await ctx.db.patch("tasks", args.taskId, {
       status: "completed",
       completedAt: Date.now(),
     });
@@ -173,7 +189,7 @@ export const updateNote = mutation({
   returns: v.null(),
   handler: async (ctx, args) => {
     // Patch directly - ctx.db.patch throws if document doesn't exist
-    await ctx.db.patch(args.id, { content: args.content });
+    await ctx.db.patch("notes", args.id, { content: args.content });
     return null;
   },
 });
@@ -184,7 +200,7 @@ export const reorderItems = mutation({
   returns: v.null(),
   handler: async (ctx, args) => {
     const updates = args.itemIds.map((id, index) =>
-      ctx.db.patch(id, { order: index })
+      ctx.db.patch("items", id, { order: index }),
     );
     await Promise.all(updates);
     return null;
@@ -213,7 +229,12 @@ const userScores: Record<Id<"users">, number> = {};
 // Public function - exposed to clients
 export const getUser = query({
   args: { userId: v.id("users") },
-  returns: v.union(v.null(), v.object({ /* ... */ })),
+  returns: v.union(
+    v.null(),
+    v.object({
+      /* ... */
+    }),
+  ),
   handler: async (ctx, args) => {
     // ...
   },
@@ -282,14 +303,14 @@ export const update = mutation({
   returns: v.null(),
   handler: async (ctx, args) => {
     const { taskId, ...updates } = args;
-    
+
     // Remove undefined values
     const cleanUpdates = Object.fromEntries(
-      Object.entries(updates).filter(([_, v]) => v !== undefined)
+      Object.entries(updates).filter(([_, v]) => v !== undefined),
     );
-    
+
     if (Object.keys(cleanUpdates).length > 0) {
-      await ctx.db.patch(taskId, cleanUpdates);
+      await ctx.db.patch("tasks", taskId, cleanUpdates);
     }
     return null;
   },
@@ -299,7 +320,7 @@ export const remove = mutation({
   args: { taskId: v.id("tasks") },
   returns: v.null(),
   handler: async (ctx, args) => {
-    await ctx.db.delete(args.taskId);
+    await ctx.db.delete("tasks", args.taskId);
     return null;
   },
 });

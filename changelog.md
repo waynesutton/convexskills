@@ -7,6 +7,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.6] - 2026-02-02
+
+### Added
+
+- Retrieval-led reasoning pattern in AGENTS.md, CLAUDE.md, and GEMINI.md
+  - Compressed Convex docs index pointing to https://docs.convex.dev/llms.txt
+  - Instruction to prefer retrieval over pre-training for Convex tasks
+- Quick Reference section with common code patterns (function syntax, schema, queries)
+- `prds/how-it-works.md`: Internal documentation explaining AGENTS.md vs Skills approach
+- Dual-approach architecture: passive context (AGENTS.md) + on-demand skills
+
+### Changed
+
+- Updated AGENTS.md with Convex Documentation Index section
+- Updated CLAUDE.md with matching documentation index
+- Updated GEMINI.md with llms.txt reference and retrieval instruction
+
+### Fixed
+
+- Added missing convex-eslint to bin/cli.js SKILLS object
+
+### Notes
+
+Based on Vercel's research showing AGENTS.md with docs index achieves 100% pass rate vs 53% for skills alone.
+See: https://vercel.com/blog/agents-md-outperforms-skills-in-our-agent-evals
+
+## [1.0.5] - 2026-02-02
+
+### Added
+
+- `skills/convex-eslint/SKILL.md`: ESLint compliance skill for writing linter-clean Convex code
+  - Covers all four @convex-dev/eslint-plugin rules
+  - Setup instructions for eslint.config.js
+  - Code examples for each rule (no-old-registered-function-syntax, require-argument-validators, explicit-table-ids, import-wrong-runtime)
+- `.codex/README.md`: Codex CLI integration instructions
+- Code Quality sections in `convex-functions` and `convex-best-practices` skills
+- Linting section in `templates/CLAUDE.md`
+- Code Quality section in `README.md`
+
+### Changed
+
+- Updated all db.get, db.patch, db.delete, db.replace calls in skills to use explicit table names
+- Updated `README.md` Available Skills table to include convex-eslint
+- Updated `AGENTS.md` and `CLAUDE.md` to include convex-eslint in skills list
+- Updated `index.js` SKILLS constant with convex-eslint
+- Updated `package.json` version to 1.0.5, added eslint and linting keywords
+- Updated `files.md` to document convex-eslint skill and .codex directory
+- Updated repository structure in README to include .codex folder
+
+## [1.0.4] - 2026-01-14
+
 ### Added
 
 - Template skills for developers who fork the repository

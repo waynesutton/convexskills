@@ -9,6 +9,15 @@ A collection of AI-consumable skills for building production-ready applications 
 
 This repository contains skills that help AI assistants understand and implement Convex best practices. Each skill provides structured guidance for specific aspects of Convex development.
 
+## Code Quality
+
+All skills are designed to produce code that passes @convex-dev/eslint-plugin by default. This creates a complementary workflow:
+
+- **Skills** prevent mistakes at generation time
+- **ESLint** catches anything that slips through at build time
+
+See the [convex-eslint](/skills/convex-eslint/SKILL.md) skill for setup instructions.
+
 ## Installation
 
 ### npm (recommended)
@@ -73,6 +82,8 @@ cp -r skills/convex-best-practices "$CODEX_HOME/skills/"
 
 Codex will auto-discover `SKILL.md` files in that directory on the next start.
 
+If you are working from a repo clone, Codex also auto-discovers skills from `.codex/skills` at the repo root. You can symlink this repo’s `skills/*` into `.codex/skills` so updates flow through without copying.
+
 ### OpenCode
 
 OpenCode discovers skills from `~/.claude/skills/<name>/SKILL.md` automatically. See OpenCode Skills docs for more details.
@@ -102,6 +113,7 @@ Copy the desired skill's `SKILL.md` file to your project's `.claude/skills/` dir
 | Skill                                                                    | Description                                           |
 | ------------------------------------------------------------------------ | ----------------------------------------------------- |
 | [convex-best-practices](skills/convex-best-practices/SKILL.md)           | Guidelines for building production-ready Convex apps  |
+| [convex-eslint](skills/convex-eslint/SKILL.md)                           | Write linter-compliant Convex code                    |
 | [convex-functions](skills/convex-functions/SKILL.md)                     | Writing queries, mutations, actions, and HTTP actions |
 | [convex-realtime](skills/convex-realtime/SKILL.md)                       | Patterns for building reactive applications           |
 | [convex-schema-validator](skills/convex-schema-validator/SKILL.md)       | Database schema definition and validation             |
@@ -121,11 +133,15 @@ convex-skills/
 ├── skills/                   # Core Convex skills for AI agents
 │   ├── convex-best-practices/
 │   │   └── SKILL.md
+│   ├── convex-eslint/
+│   │   └── SKILL.md
 │   ├── convex-functions/
 │   │   └── SKILL.md
 │   ├── convex-cron-jobs/
 │   │   └── SKILL.md
 │   └── ...
+├── .codex/                   # Codex integration (symlink skills here)
+│   └── README.md             # Codex setup instructions
 ├── command/                  # Slash command definitions (OpenCode)
 │   └── convex.md             # /convex command entrypoint
 ├── templates/                # Templates for forking developers

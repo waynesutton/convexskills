@@ -11,6 +11,16 @@ tags: [convex, functions, queries, mutations, actions, http]
 
 Master Convex functions including queries, mutations, actions, and HTTP endpoints with proper validation, error handling, and runtime considerations.
 
+## Code Quality
+
+All examples in this skill comply with @convex-dev/eslint-plugin rules:
+
+- Object syntax with `handler` property
+- Argument validators on all functions
+- Explicit table names in database operations
+
+See [convex-eslint](../convex-eslint/SKILL.md) for linting setup.
+
 ## Documentation Sources
 
 Before implementing, do not assume; fetch the latest documentation:
@@ -26,12 +36,12 @@ Before implementing, do not assume; fetch the latest documentation:
 
 ### Function Types Overview
 
-| Type | Database Access | External APIs | Caching | Use Case |
-|------|----------------|---------------|---------|----------|
-| Query | Read-only | No | Yes, reactive | Fetching data |
-| Mutation | Read/Write | No | No | Modifying data |
-| Action | Via runQuery/runMutation | Yes | No | External integrations |
-| HTTP Action | Via runQuery/runMutation | Yes | No | Webhooks, APIs |
+| Type        | Database Access          | External APIs | Caching       | Use Case              |
+| ----------- | ------------------------ | ------------- | ------------- | --------------------- |
+| Query       | Read-only                | No            | Yes, reactive | Fetching data         |
+| Mutation    | Read/Write               | No            | No            | Modifying data        |
+| Action      | Via runQuery/runMutation | Yes           | No            | External integrations |
+| HTTP Action | Via runQuery/runMutation | Yes           | No            | Webhooks, APIs        |
 
 ### Queries
 
@@ -50,22 +60,24 @@ export const getUser = query({
       name: v.string(),
       email: v.string(),
     }),
-    v.null()
+    v.null(),
   ),
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.userId);
+    return await ctx.db.get("users", args.userId);
   },
 });
 
 // Query with index
 export const listUserTasks = query({
   args: { userId: v.id("users") },
-  returns: v.array(v.object({
-    _id: v.id("tasks"),
-    _creationTime: v.number(),
-    title: v.string(),
-    completed: v.boolean(),
-  })),
+  returns: v.array(
+    v.object({
+      _id: v.id("tasks"),
+      _creationTime: v.number(),
+      title: v.string(),
+      completed: v.boolean(),
+    }),
+  ),
   handler: async (ctx, args) => {
     return await ctx.db
       .query("tasks")
@@ -93,7 +105,7 @@ export const createTask = mutation({
   returns: v.id("tasks"),
   handler: async (ctx, args) => {
     // Validate user exists
-    const user = await ctx.db.get(args.userId);
+    const user = await ctx.db.get("users", args.userId);
     if (!user) {
       throw new ConvexError("User not found");
     }
@@ -111,7 +123,7 @@ export const deleteTask = mutation({
   args: { taskId: v.id("tasks") },
   returns: v.null(),
   handler: async (ctx, args) => {
-    await ctx.db.delete(args.taskId);
+    await ctx.db.delete("tasks", args.taskId);
     return null;
   },
 });
@@ -154,7 +166,7 @@ export const processOrder = action({
   handler: async (ctx, args) => {
     // Read data via query
     const order = await ctx.runQuery(api.orders.get, { orderId: args.orderId });
-    
+
     if (!order) {
       throw new Error("Order not found");
     }
@@ -218,8 +230,8 @@ http.route({
     const url = new URL(request.url);
     const userId = url.pathname.split("/").pop();
 
-    const user = await ctx.runQuery(api.users.get, { 
-      userId: userId as Id<"users"> 
+    const user = await ctx.runQuery(api.users.get, {
+      userId: userId as Id<"users">,
     });
 
     if (!user) {
@@ -238,7 +250,11 @@ export default http;
 Use internal functions for sensitive operations:
 
 ```typescript
-import { internalMutation, internalQuery, internalAction } from "./_generated/server";
+import {
+  internalMutation,
+  internalQuery,
+  internalAction,
+} from "./_generated/server";
 import { v } from "convex/values";
 
 // Only callable from other Convex functions
@@ -249,10 +265,10 @@ export const _updateUserCredits = internalMutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const user = await ctx.db.get(args.userId);
+    const user = await ctx.db.get("users", args.userId);
     if (!user) return null;
 
-    await ctx.db.patch(args.userId, {
+    await ctx.db.patch("users", args.userId, {
       credits: (user.credits || 0) + args.amount,
     });
     return null;
@@ -298,7 +314,7 @@ export const scheduleReminder = mutation({
     return await ctx.scheduler.runAfter(
       args.delayMs,
       internal.notifications.sendReminder,
-      { userId: args.userId, message: args.message }
+      { userId: args.userId, message: args.message },
     );
   },
 });

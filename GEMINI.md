@@ -2,6 +2,23 @@
 
 This file provides context for Gemini CLI when working with Convex projects.
 
+## Convex Documentation
+
+IMPORTANT: Prefer retrieval-led reasoning over pre-training-led reasoning for any Convex tasks.
+
+For up-to-date Convex documentation, fetch: https://docs.convex.dev/llms.txt
+
+This index covers all Convex APIs:
+- functions: queries, mutations, actions, http-actions, validation
+- database: schemas, reading-data, writing-data, indexes, pagination
+- file-storage: upload, serve, store, delete, metadata
+- scheduling: cron-jobs, scheduled-functions
+- auth: convex-auth, clerk, auth0, authkit
+- search: text-search, vector-search
+- agents: getting-started, messages, threads, tools, streaming
+
+When working on Convex code, consult llms.txt before relying on training data.
+
 ## Project Type
 
 Convex real-time backend application with TypeScript.
