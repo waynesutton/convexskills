@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.7] - 2026-02-02
+
+### Added
+
+- Codex skill icons via `agents/openai.yaml` in every skill folder
+- `assets/small-logo.svg` and `assets/large-logo.png` for Codex UI display
+
 ## [1.0.6] - 2026-02-02
 
 ### Added

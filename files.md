@@ -18,7 +18,7 @@ Brief description of each file in the repository.
 
 ## Skills Directory (`skills/`)
 
-Core Convex skills for AI agents. Each skill has `name` matching folder name for `/skill` commands.
+Core Convex skills for AI agents. Each skill has `name` matching folder name for `/skill` commands. Each skill now includes `agents/openai.yaml` plus `assets/small-logo.svg` and `assets/large-logo.png` for Codex UI icons and metadata.
 
 | Skill                                 | Description                              |
 | ------------------------------------- | ---------------------------------------- |
