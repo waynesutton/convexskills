@@ -70,6 +70,14 @@ Active Claude Code skills for this repository.
 | `help.md`     | Problem-solving methodology       |
 | `write.md`    | Writing style guide               |
 
+## Standard Agent Skills Directory (`.agents/skills/`)
+
+Compatibility skills path for tools that scan `.agents/skills`.
+
+| Directory | Description                                               |
+| --------- | --------------------------------------------------------- |
+| `skills/` | Target directory created by CLI or symlinked to `skills/` |
+
 ## PRDs Directory (`prds/`)
 
 Product requirement documents and planning.

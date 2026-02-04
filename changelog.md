@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Support for `.agents/skills` installs via CLI `--target`
+- Optional `--link` flag to symlink SKILL.md files instead of copying
+
 ### Fixed
 
 - Removed unsupported frontmatter fields from `skills/convex-best-practices/SKILL.md` to avoid Pi skill parser conflicts

@@ -9,6 +9,7 @@ import {
   existsSync,
   copyFileSync,
   readdirSync,
+  symlinkSync,
 } from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -32,6 +33,12 @@ const SKILLS = {
   "convex-component-authoring": "Creating reusable Convex components",
 };
 
+const TARGET_ALIASES = new Map([
+  ["claude", ".claude/skills"],
+  ["codex", ".codex/skills"],
+  ["agents", ".agents/skills"],
+]);
+
 function printHelp() {
   console.log(`
 convex-skills - Agent skills for building Convex applications
@@ -49,12 +56,17 @@ COMMANDS:
 
 OPTIONS:
   --dir <path>            Target directory (default: current directory)
+  --target <name|path>     Install target: claude, codex, agents, or a path
+  --link                  Symlink SKILL.md instead of copying
   --help, -h              Show this help message
 
 EXAMPLES:
   convex-skills list
   convex-skills install convex-best-practices
   convex-skills install-all
+  convex-skills install-all --target agents
+  convex-skills install convex-functions --target .agents/skills
+  convex-skills install convex-best-practices --target codex --link
   convex-skills install-templates
   convex-skills show convex-functions
 
@@ -73,7 +85,27 @@ function listSkills() {
   console.log("");
 }
 
-function installSkill(skillName, targetDir) {
+function ensureDir(dirPath) {
+  if (!existsSync(dirPath)) {
+    mkdirSync(dirPath, { recursive: true });
+  }
+}
+
+function resolveTargetSkillsDir(targetDir, target) {
+  if (!target) {
+    return join(targetDir, ".claude", "skills");
+  }
+
+  const alias = TARGET_ALIASES.get(target);
+  if (alias) {
+    return join(targetDir, alias);
+  }
+
+  const resolved = resolve(targetDir, target);
+  return resolved.endsWith("skills") ? resolved : join(resolved, "skills");
+}
+
+function installSkill(skillName, targetSkillsDir, useSymlink) {
   const skillsPath = join(packageRoot, "skills", skillName, "SKILL.md");
 
   if (!existsSync(skillsPath)) {
@@ -82,24 +114,24 @@ function installSkill(skillName, targetDir) {
     process.exit(1);
   }
 
-  const targetPath = join(
-    targetDir,
-    ".claude",
-    "skills",
-    skillName,
-    "SKILL.md",
-  );
+  const targetPath = join(targetSkillsDir, skillName, "SKILL.md");
   const targetSkillDir = dirname(targetPath);
 
-  if (!existsSync(targetSkillDir)) {
-    mkdirSync(targetSkillDir, { recursive: true });
+  ensureDir(targetSkillDir);
+
+  if (useSymlink) {
+    if (!existsSync(targetPath)) {
+      symlinkSync(skillsPath, targetPath);
+    }
+    console.log(`Linked ${skillName} to ${targetPath}`);
+    return;
   }
 
   copyFileSync(skillsPath, targetPath);
   console.log(`Installed ${skillName} to ${targetPath}`);
 }
 
-function installAllSkills(targetDir) {
+function installAllSkills(targetSkillsDir, useSymlink) {
   const skillsDir = join(packageRoot, "skills");
   const skills = readdirSync(skillsDir, { withFileTypes: true })
     .filter((dirent) => dirent.isDirectory())
@@ -108,11 +140,11 @@ function installAllSkills(targetDir) {
   console.log(`Installing ${skills.length} skills...\n`);
 
   skills.forEach((skillName) => {
-    installSkill(skillName, targetDir);
+    installSkill(skillName, targetSkillsDir, useSymlink);
   });
 
   console.log(
-    `\nDone! Installed ${skills.length} skills to ${join(targetDir, ".claude", "skills")}`,
+    `\nDone! Installed ${skills.length} skills to ${targetSkillsDir}`,
   );
 }
 
@@ -139,9 +171,7 @@ function installTemplates(targetDir) {
     );
     const targetSkillsDir = join(targetDir, ".claude", "skills");
 
-    if (!existsSync(targetSkillsDir)) {
-      mkdirSync(targetSkillsDir, { recursive: true });
-    }
+    ensureDir(targetSkillsDir);
 
     templates.forEach((template) => {
       const src = join(skillTemplatesDir, template);
@@ -184,6 +214,8 @@ function printSkillPath(skillName) {
 // Parse arguments
 const args = process.argv.slice(2);
 let targetDir = process.cwd();
+let target = null;
+let useSymlink = false;
 
 // Check for --dir flag
 const dirIndex = args.indexOf("--dir");
@@ -192,8 +224,21 @@ if (dirIndex !== -1 && args[dirIndex + 1]) {
   args.splice(dirIndex, 2);
 }
 
+const targetIndex = args.indexOf("--target");
+if (targetIndex !== -1 && args[targetIndex + 1]) {
+  target = args[targetIndex + 1];
+  args.splice(targetIndex, 2);
+}
+
+const linkIndex = args.indexOf("--link");
+if (linkIndex !== -1) {
+  useSymlink = true;
+  args.splice(linkIndex, 1);
+}
+
 const command = args[0];
 const arg = args[1];
+const targetSkillsDir = resolveTargetSkillsDir(targetDir, target);
 
 switch (command) {
   case "list":
@@ -205,10 +250,10 @@ switch (command) {
       console.log("Run 'convex-skills list' to see available skills.");
       process.exit(1);
     }
-    installSkill(arg, targetDir);
+    installSkill(arg, targetSkillsDir, useSymlink);
     break;
   case "install-all":
-    installAllSkills(targetDir);
+    installAllSkills(targetSkillsDir, useSymlink);
     break;
   case "install-templates":
     installTemplates(targetDir);

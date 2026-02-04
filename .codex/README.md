@@ -19,6 +19,15 @@ cp -r skills/convex-best-practices .codex/skills/
 cp -r skills/convex-eslint .codex/skills/
 ```
 
+## Standard Agent Skills Path
+
+Some tools are standardizing on `.agents/skills`. You can mirror the repo skills there as well:
+
+```bash
+# From the repo root
+ln -s ../skills .agents/skills
+```
+
 ## Alternative: Install to CODEX_HOME
 
 For global access across all projects:

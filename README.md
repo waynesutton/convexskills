@@ -35,6 +35,12 @@ convex-skills install convex-best-practices
 # Install all skills
 convex-skills install-all
 
+# Install all skills to .agents/skills
+convex-skills install-all --target agents
+
+# Symlink SKILL.md files instead of copying
+convex-skills install-all --target agents --link
+
 # Install templates (CLAUDE.md + skill templates)
 convex-skills install-templates
 ```
@@ -83,6 +89,15 @@ cp -r skills/convex-best-practices "$CODEX_HOME/skills/"
 Codex will auto-discover `SKILL.md` files in that directory on the next start.
 
 If you are working from a repo clone, Codex also auto-discovers skills from `.codex/skills` at the repo root. You can symlink this repo’s `skills/*` into `.codex/skills` so updates flow through without copying.
+
+### Standard Agent Skills Path
+
+Some tools are standardizing on `.agents/skills` for discovery. This repo supports that layout via the CLI:
+
+```bash
+convex-skills install-all --target agents
+convex-skills install-all --target agents --link
+```
 
 ### OpenCode
 
@@ -142,6 +157,7 @@ convex-skills/
 │   └── ...
 ├── .codex/                   # Codex integration (symlink skills here)
 │   └── README.md             # Codex setup instructions
+├── .agents/                  # Standard agent skills path
 ├── command/                  # Slash command definitions (OpenCode)
 │   └── convex.md             # /convex command entrypoint
 ├── templates/                # Templates for forking developers
