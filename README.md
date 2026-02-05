@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@waynesutton/convex-skills.svg)](https://www.npmjs.com/package/@waynesutton/convex-skills)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-A collection of AI-consumable skills for building production-ready applications with [Convex](https://convex.dev), following the Agent Skills open format.
+A collection of AI-consumable skills for building production-ready applications with [Convex](https://convex.dev), following the Agent Skills open format. Works with Claude Code, AdaL, and other AI coding agents.
 
 ## Overview
 
