@@ -11,7 +11,7 @@ Brief description of each file in the repository.
 | `CONTRIBUTING.md` | Contribution guidelines                                          |
 | `GEMINI.md`       | Gemini CLI integration with llms.txt reference                   |
 | `LICENSE`         | Apache-2.0 license                                               |
-| `README.md`       | Project overview and installation                                |
+| `README.md`       | Project overview, links to official Convex Agent Plugins, and installation |
 | `changelog.md`    | Version history following keepachangelog format                  |
 | `files.md`        | This file, codebase structure reference                          |
 | `task.md`         | Completed task tracking                                          |

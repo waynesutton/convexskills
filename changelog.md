@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Updated README.md to reference official Convex Agent Plugins repo as the primary resource
+- Fixed typo in README heading ("offical" to "official")
+- Removed banned word "comprehensive" from README description
+- Updated package.json npm description to reference official Convex Agent Plugins
+
 ### Added
 
 - Support for `.agents/skills` installs via CLI `--target`

@@ -1,4 +1,11 @@
-# Convex (unofficial) Skills v1
+# For official Convex Skills use Convex Agent Plugins
+
+Official Convex plugins for AI coding agents, providing development tools for building reactive backends with TypeScript.
+
+https://github.com/get-convex/convex-agent-plugins
+
+
+## Convex (unofficial) Skills 
 
 [![npm version](https://img.shields.io/npm/v/@waynesutton/convex-skills.svg)](https://www.npmjs.com/package/@waynesutton/convex-skills)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
