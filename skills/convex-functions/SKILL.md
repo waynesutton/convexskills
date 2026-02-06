@@ -19,7 +19,7 @@ All examples in this skill comply with @convex-dev/eslint-plugin rules:
 - Argument validators on all functions
 - Explicit table names in database operations
 
-See [convex-eslint](../convex-eslint/SKILL.md) for linting setup.
+See the Code Quality section in [convex-best-practices](../convex-best-practices/SKILL.md) for linting setup.
 
 ## Documentation Sources
 

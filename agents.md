@@ -40,7 +40,6 @@ This repository provides two complementary approaches for AI coding agents:
 | Skill                                                                    | Description                                           |
 | ------------------------------------------------------------------------ | ----------------------------------------------------- |
 | [convex-best-practices](skills/convex-best-practices/SKILL.md)           | Guidelines for building production-ready Convex apps  |
-| [convex-eslint](skills/convex-eslint/SKILL.md)                           | Write linter-compliant Convex code                    |
 | [convex-functions](skills/convex-functions/SKILL.md)                     | Writing queries, mutations, actions, and HTTP actions |
 | [convex-realtime](skills/convex-realtime/SKILL.md)                       | Patterns for building reactive applications           |
 | [convex-schema-validator](skills/convex-schema-validator/SKILL.md)       | Database schema definition and validation             |

@@ -54,7 +54,6 @@ export function getSkillPath(skillName) {
 export const SKILLS = {
   "convex-best-practices":
     "Guidelines for building production-ready Convex apps",
-  "convex-eslint": "Write linter-compliant Convex code",
   "convex-functions": "Writing queries, mutations, actions, and HTTP actions",
   "convex-realtime": "Patterns for building reactive applications",
   "convex-schema-validator": "Database schema definition and validation",

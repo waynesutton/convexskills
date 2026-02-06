@@ -16,7 +16,7 @@ Or copy specific skills:
 ```bash
 mkdir -p .codex/skills
 cp -r skills/convex-best-practices .codex/skills/
-cp -r skills/convex-eslint .codex/skills/
+cp -r skills/convex-functions .codex/skills/
 ```
 
 ## Standard Agent Skills Path
@@ -42,7 +42,6 @@ cp -r skills/* "$CODEX_HOME/skills/"
 All skills in the `skills/` directory are available for Codex:
 
 - convex-best-practices
-- convex-eslint
 - convex-functions
 - convex-realtime
 - convex-schema-validator

@@ -16,7 +16,7 @@ All skills are designed to produce code that passes @convex-dev/eslint-plugin by
 - **Skills** prevent mistakes at generation time
 - **ESLint** catches anything that slips through at build time
 
-See the [convex-eslint](/skills/convex-eslint/SKILL.md) skill for setup instructions.
+See the Code Quality section in [convex-best-practices](/skills/convex-best-practices/SKILL.md) for setup instructions.
 
 ## Installation
 
@@ -128,7 +128,6 @@ Copy the desired skill's `SKILL.md` file to your project's `.claude/skills/` dir
 | Skill                                                                    | Description                                           |
 | ------------------------------------------------------------------------ | ----------------------------------------------------- |
 | [convex-best-practices](skills/convex-best-practices/SKILL.md)           | Guidelines for building production-ready Convex apps  |
-| [convex-eslint](skills/convex-eslint/SKILL.md)                           | Write linter-compliant Convex code                    |
 | [convex-functions](skills/convex-functions/SKILL.md)                     | Writing queries, mutations, actions, and HTTP actions |
 | [convex-realtime](skills/convex-realtime/SKILL.md)                       | Patterns for building reactive applications           |
 | [convex-schema-validator](skills/convex-schema-validator/SKILL.md)       | Database schema definition and validation             |
@@ -147,8 +146,6 @@ Copy the desired skill's `SKILL.md` file to your project's `.claude/skills/` dir
 convex-skills/
 ├── skills/                   # Core Convex skills for AI agents
 │   ├── convex-best-practices/
-│   │   └── SKILL.md
-│   ├── convex-eslint/
 │   │   └── SKILL.md
 │   ├── convex-functions/
 │   │   └── SKILL.md

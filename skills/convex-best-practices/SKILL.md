@@ -9,14 +9,32 @@ Build production-ready Convex applications by following established patterns for
 
 ## Code Quality
 
-All patterns in this skill comply with @convex-dev/eslint-plugin rules.
-Install the linter for build-time validation:
+All patterns in this skill comply with `@convex-dev/eslint-plugin`. Install it for build-time validation:
 
 ```bash
 npm i @convex-dev/eslint-plugin --save-dev
 ```
 
-See [convex-eslint](../convex-eslint/SKILL.md) for configuration details.
+```js
+// eslint.config.js
+import { defineConfig } from "eslint/config";
+import convexPlugin from "@convex-dev/eslint-plugin";
+
+export default defineConfig([
+  ...convexPlugin.configs.recommended,
+]);
+```
+
+The plugin enforces four rules:
+
+| Rule                                | What it enforces                  |
+| ----------------------------------- | --------------------------------- |
+| `no-old-registered-function-syntax` | Object syntax with `handler`      |
+| `require-argument-validators`       | `args: {}` on all functions       |
+| `explicit-table-ids`                | Table name in db operations       |
+| `import-wrong-runtime`              | No Node imports in Convex runtime |
+
+Docs: https://docs.convex.dev/eslint
 
 ## Documentation Sources
 

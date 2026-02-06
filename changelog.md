@@ -12,6 +12,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for `.agents/skills` installs via CLI `--target`
 - Optional `--link` flag to symlink SKILL.md files instead of copying
 
+### Changed
+
+- Consolidated `convex-eslint` skill into `convex-best-practices` Code Quality section
+- ESLint setup instructions now include config example and rules table in one place
+- Updated cross-references in `convex-functions`, README, AGENTS.md, and .codex/README.md
+
+### Removed
+
+- Deleted standalone `skills/convex-eslint/` directory (content merged into convex-best-practices)
+- Removed `convex-eslint` from SKILLS constants in index.js and bin/cli.js
+
 ### Fixed
 
 - Removed unsupported frontmatter fields from `skills/convex-best-practices/SKILL.md` to avoid Pi skill parser conflicts

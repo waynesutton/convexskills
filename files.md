@@ -18,25 +18,24 @@ Brief description of each file in the repository.
 
 ## Skills Directory (`skills/`)
 
-Core Convex skills for AI agents. Each skill has `name` matching folder name for `/skill` commands. Each skill now includes `agents/openai.yaml` plus `assets/small-logo.svg` and `assets/large-logo.png` for Codex UI icons and metadata.
+Core Convex skills for AI agents. Each skill has `name` matching folder name for `/skill` commands. Each skill includes `agents/openai.yaml` plus `assets/small-logo.svg` and `assets/large-logo.png` for Codex UI icons and metadata.
 
-| Skill                                 | Description                                                |
-| ------------------------------------- | ---------------------------------------------------------- |
-| `avoid-feature-creep/SKILL.md`        | Prevent scope creep in development                         |
-| `convex/SKILL.md`                     | Umbrella index for all Convex skills                       |
-| `convex-agents/SKILL.md`              | Building AI agents with Convex                             |
-| `convex-best-practices/SKILL.md`      | Production-ready app guidelines. Pi compatible frontmatter |
-| `convex-component-authoring/SKILL.md` | Creating reusable Convex components                        |
-| `convex-cron-jobs/SKILL.md`           | Scheduled functions and background tasks                   |
-| `convex-eslint/SKILL.md`              | ESLint compliance for linter-clean code                    |
-| `convex-file-storage/SKILL.md`        | File upload, storage, and serving                          |
-| `convex-functions/SKILL.md`           | Queries, mutations, actions                                |
-| `convex-http-actions/SKILL.md`        | HTTP endpoints and webhooks                                |
-| `convex-migrations/SKILL.md`          | Schema evolution and data migrations                       |
-| `convex-realtime/SKILL.md`            | Reactive patterns and subscriptions                        |
-| `convex-schema-validator/SKILL.md`    | Schema definition and validation                           |
-| `convex-security-audit/SKILL.md`      | Deep security review patterns                              |
-| `convex-security-check/SKILL.md`      | Quick security audit checklist                             |
+| Skill                                 | Description                                                            |
+| ------------------------------------- | ---------------------------------------------------------------------- |
+| `avoid-feature-creep/SKILL.md`        | Prevent scope creep in development                                     |
+| `convex/SKILL.md`                     | Umbrella index for all Convex skills                                   |
+| `convex-agents/SKILL.md`              | Building AI agents with Convex                                         |
+| `convex-best-practices/SKILL.md`      | Production-ready app guidelines with ESLint setup in Code Quality      |
+| `convex-component-authoring/SKILL.md` | Creating reusable Convex components                                    |
+| `convex-cron-jobs/SKILL.md`           | Scheduled functions and background tasks                               |
+| `convex-file-storage/SKILL.md`        | File upload, storage, and serving                                      |
+| `convex-functions/SKILL.md`           | Queries, mutations, actions                                            |
+| `convex-http-actions/SKILL.md`        | HTTP endpoints and webhooks                                            |
+| `convex-migrations/SKILL.md`          | Schema evolution and data migrations                                   |
+| `convex-realtime/SKILL.md`            | Reactive patterns and subscriptions                                    |
+| `convex-schema-validator/SKILL.md`    | Schema definition and validation                                       |
+| `convex-security-audit/SKILL.md`      | Deep security review patterns                                          |
+| `convex-security-check/SKILL.md`      | Quick security audit checklist                                         |
 
 ## Command Directory (`command/`)
 
